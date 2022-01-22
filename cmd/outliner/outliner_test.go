@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/EvilKhaosKat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/common"
 	"reflect"
 	"testing"
 )

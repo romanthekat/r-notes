@@ -65,7 +65,7 @@ func GetWikiLinks(content []string) []string {
 
 	for _, line := range content {
 		for _, match := range re.FindAllStringSubmatch(line, -1) {
-			link := match[1]
+			link := strings.TrimSpace(match[1])
 			set[link] = struct{}{}
 		}
 	}

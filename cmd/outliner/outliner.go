@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/EvilKhaosKat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/common"
 	"log"
 	"path/filepath"
 	"strings"
@@ -37,30 +37,26 @@ func main() {
 		fmt.Println(line)
 	}
 
-	resultId, resultPath := getResultPath(path)
-	fmt.Printf("writing to %s\n", resultPath)
-
 	indexTitle := fmt.Sprintf("index for '%s'", top.Name)
 
+	resultId, resultPath := getResultPath(path, indexTitle)
+	fmt.Printf("writing to %s\n", resultPath)
+
 	resultContent := common.GetYamlHeader(resultId, indexTitle)
-	resultContent = append(resultContent, getResultNoteHeader(resultPath, indexTitle), tag)
+	resultContent = append(resultContent, fmt.Sprintf("# %s %s", resultId, indexTitle), tag)
 	resultContent = append(resultContent, outline...)
 
 	common.WriteToFile(resultPath, resultContent)
 }
 
-func getResultNoteHeader(resultPath common.Path, title string) string {
-	return fmt.Sprintf("# %s %s", common.GetFilename(resultPath), title)
-}
-
-func getResultPath(path common.Path) (id string, resultPath common.Path) {
+func getResultPath(path common.Path, title string) (id string, resultPath common.Path) {
 	basePath := filepath.Dir(string(path))
 	zkId := time.Now().Format("200601021504")
 	return zkId, common.Path(
-		fmt.Sprintf("%s/%s.md", basePath, zkId))
+		fmt.Sprintf("%s/%s %s.md", basePath, zkId, title))
 }
 
-//TODO iterative version would be better, but lack of stdlib queue would decrease readability
+//TODO iterative version would be better, but lack of stdlib queue would decreases readability
 func getNotesOutline(note *common.Note, padding string, result []string) []string {
 	if note == nil {
 		return result

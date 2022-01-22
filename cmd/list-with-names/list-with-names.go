@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/EvilKhaosKat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/common"
 	"log"
 	"sort"
 )
