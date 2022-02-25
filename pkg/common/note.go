@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type Note struct {
@@ -14,8 +15,8 @@ type Note struct {
 	//Backlinks *[]Note //TODO implement
 	Links []*Note
 
-	isContentLoaded bool
-	Content         []string
+	load    *sync.Once
+	Content []string
 }
 
 func (n Note) String() string {
@@ -27,18 +28,16 @@ func NewNote(id, name string, path Path, Links []*Note) *Note {
 }
 
 func (n *Note) GetContent() []string {
-	if n.isContentLoaded {
-		return n.Content
-	}
+	n.load.Do(func() {
+		content, err := ReadFile(n.Path)
+		if err != nil {
+			panic(fmt.Sprintf("can't load file %s content: %s", n, err))
+		}
 
-	content, err := ReadFile(n.Path)
-	if err != nil {
-		panic(fmt.Sprintf("can't load file %s content: %s", n, err))
-	}
+		n.Content = content
+	})
 
-	n.isContentLoaded = true
-	n.Content = content
-	return content
+	return n.Content
 }
 
 //GetFilesByWikiLinks parses wikilinks of a note and returns paths to correspondent files
@@ -60,8 +59,8 @@ func GetFilesByWikiLinks(currentPath Path, paths []Path, wikiLinks []string) []P
 //GetWikiLinks extracts [[LINK]] from provided path content
 //TODO make sure to guarantee order
 func GetWikiLinks(content []string) []string {
-	set := make(map[string]struct{})          //lack of golang sets ;(
-	re := regexp.MustCompile(`\[\[(.+?)\]\]`) //TODO compile once for app rather than once per path
+	set := make(map[string]struct{})        //lack of golang sets ;(
+	re := regexp.MustCompile(`\[\[(.+?)]]`) //TODO compile once for app rather than once per path
 
 	for _, line := range content {
 		for _, match := range re.FindAllStringSubmatch(line, -1) {
@@ -76,4 +75,8 @@ func GetWikiLinks(content []string) []string {
 	}
 
 	return links
+}
+
+func GetNoteLink(note *Note) string {
+	return fmt.Sprintf("%s [[%s]]", note.Name, note.Id)
 }

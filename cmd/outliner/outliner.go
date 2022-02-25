@@ -5,7 +5,6 @@ import (
 	"github.com/romanthekat/r-notes/pkg/common"
 	"log"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -56,29 +55,19 @@ func getResultPath(path common.Path, title string) (id string, resultPath common
 		fmt.Sprintf("%s/%s %s.md", basePath, zkId, title))
 }
 
-//TODO iterative version would be better, but lack of stdlib queue would decreases readability
+//TODO iterative version would be better, but lack of stdlib queue would decrease readability
 func getNotesOutline(note *common.Note, padding string, result []string) []string {
 	if note == nil {
 		return result
 	}
 
-	noteLink := getNoteLink(note)
+	noteLink := common.GetNoteLink(note)
 	result = append(result, fmt.Sprintf("%s- %s%s", padding, noteLink, markdownLineBreak))
 	for _, child := range note.Links {
 		result = getNotesOutline(child, padding+notesDelimiter, result)
 	}
 
 	return result
-}
-
-//TODO extract and reuse with logic from common pkg
-func getNoteLink(note *common.Note) string {
-	firstSpaceIndex := strings.Index(note.Name, " ")
-	if firstSpaceIndex != -1 && common.IsZkId(note.Name[:firstSpaceIndex]) {
-		return fmt.Sprintf("%s [[%s]]", note.Name[firstSpaceIndex+1:], note.Name[:firstSpaceIndex])
-	} else {
-		return fmt.Sprintf("%s [[%s]]", note.Name, note.Id)
-	}
 }
 
 func parseNoteHierarchy(path common.Path, paths []common.Path, levelsLeft int) *common.Note {

@@ -52,12 +52,12 @@ func Test_getNotesOutline(t *testing.T) {
 				note: common.NewNote(
 					"202105122138",
 					"note",
-					"/path/to/202105122138.md",
+					"/path/to/202105122138 note.md",
 					[]*common.Note{
 						{
 							Id:   "202105122139",
 							Name: "child",
-							Path: "path/to/202105122139.md",
+							Path: "path/to/202105122139 child.md",
 						},
 					}),
 				padding: "",

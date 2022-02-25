@@ -5,32 +5,6 @@ import (
 	"testing"
 )
 
-func Test_GetFilename(t *testing.T) {
-	type args struct {
-		path common.Path
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "main",
-			args: args{
-				path: "/somewhere/zkId/1 note.md",
-			},
-			want: "1 note",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := common.GetFilename(tt.args.path); got != tt.want {
-				t.Errorf("GetFullNoteName() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_getFilepathOnlyId(t *testing.T) {
 	type args struct {
 		path common.Path
@@ -54,32 +28,6 @@ func Test_getFilepathOnlyId(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := getFilepathOnlyId(tt.args.path, tt.args.id); got != tt.want {
 				t.Errorf("getFilepathOnlyId() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_formatIdAsDate(t *testing.T) {
-	type args struct {
-		zkId string
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "simple example",
-			args: args{
-				zkId: "202105091600",
-			},
-			want: "2021-05-09 16:00",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := common.FormatIdAsIsoDate(tt.args.zkId); got != tt.want {
-				t.Errorf("FormatIdAsIsoDate() = %v, want %v", got, tt.want)
 			}
 		})
 	}
