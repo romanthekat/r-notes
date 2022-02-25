@@ -80,12 +80,7 @@ func parseNoteHierarchy(path common.Path, paths []common.Path, levelsLeft int) *
 		log.Fatal(err)
 	}
 
-	id, noteName, err := common.GetNoteNameByPath(path)
-	if err != nil {
-		panic(err)
-	}
-
-	note := common.NewNote(id, noteName, path, nil)
+	note := common.NewNoteByPath(path)
 
 	linkedFiles := common.GetFilesByWikiLinks(path, paths, common.GetWikiLinks(content))
 	for _, linkedFile := range linkedFiles {

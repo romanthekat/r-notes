@@ -80,3 +80,20 @@ func GetWikiLinks(content []string) []string {
 func GetNoteLink(note *Note) string {
 	return fmt.Sprintf("%s [[%s]]", note.Name, note.Id)
 }
+
+func NewNoteByPath(path Path) *Note {
+	isZettel, id, name := ParseNoteFilename(GetFilename(path))
+	note := NewNote(id, name, path, nil)
+
+	if isZettel && len(name) != 0 {
+		return note
+	}
+
+	name, err := GetNoteNameByNoteContent(note.GetContent())
+	if err != nil {
+		panic(err)
+	}
+
+	note.Name = name
+	return note
+}

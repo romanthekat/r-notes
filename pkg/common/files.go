@@ -2,7 +2,6 @@ package common
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -38,25 +37,6 @@ func GetNotesPaths(folderPath Path, extension string) ([]Path, error) {
 func GetFilename(path Path) string {
 	filename := filepath.Base(string(path))
 	return strings.TrimSuffix(filename, filepath.Ext(filename))
-}
-
-func GetNoteNameByPath(path Path) (id, name string, err error) {
-	isZettel, id, name := ParseNoteFilename(GetFilename(path))
-	if isZettel && len(name) != 0 {
-		return id, name, nil
-	}
-
-	content, err := ReadFile(path)
-	if err != nil {
-		return "", "", fmt.Errorf("reading note %v failed: %w", path, err)
-	}
-
-	name, err = GetNoteNameByNoteContent(content)
-	if err != nil {
-		return "", "", err
-	}
-
-	return id, name, nil
 }
 
 func ReadFile(path Path) ([]string, error) {

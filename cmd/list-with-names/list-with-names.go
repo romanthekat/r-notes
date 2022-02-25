@@ -20,14 +20,9 @@ func main() {
 
 	var result []string
 	for _, path := range paths {
-		id, name, err := common.GetNoteNameByPath(path)
-		if err != nil {
-			log.Printf("error while extracting note name from file '%s'\n", path)
-			continue
-		}
-
-		if id != "" {
-			result = append(result, fmt.Sprintf("[[%s]] %s", id, name))
+		note := common.NewNoteByPath(path)
+		if note.Id != "" {
+			result = append(result, fmt.Sprintf("[[%s]] %s", note.Id, note.Name))
 		}
 	}
 
