@@ -23,8 +23,17 @@ func (n *Note) String() string {
 	return GetNoteLink(n)
 }
 
-func NewNote(id, name string, path Path, content []string, Links []*Note) *Note {
-	return &Note{Id: id, Name: name, Path: path, Links: Links, Content: content, loadContent: &sync.Once{}}
+func NewNote(id, name string, path Path, content []string) *Note {
+	return &Note{Id: id, Name: name, Path: path, Content: content, loadContent: &sync.Once{}}
+}
+
+func NewNoteWithLinks(id, name string, path Path, content []string, links []*Note, backlinks []*Note) *Note {
+	note := NewNote(id, name, path, content)
+
+	note.Links = links
+	note.Backlinks = backlinks
+
+	return note
 }
 
 func (n *Note) HasId() bool {
@@ -66,7 +75,7 @@ func NewNotesByPaths(paths []Path) []*Note {
 
 func NewNoteByPath(path Path) *Note {
 	isZettel, id, name := ParseNoteFilename(GetFilename(path))
-	note := NewNote(id, name, path, []string{}, nil)
+	note := NewNote(id, name, path, []string{})
 
 	if isZettel && len(name) != 0 {
 		return note

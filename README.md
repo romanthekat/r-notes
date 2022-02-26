@@ -1,8 +1,27 @@
 # r-notes
 
+This is a collection of tools I use for my notes in markdown, zettelkasten alike, format.
+
+---
+
+## Regenerate-backlinks
+
+Recalculates backlinks for notes, and appends to the end of files.
+
+### Install
+
+`go install github.com/romanthekat/r-notes/cmd/regenerate-backlinks@latest`
+
+### Usage
+
+`regenerate-backlinks "path/to/notes/folder"`
+
+
+---
+
 ## Outliner
 
-Generates an outline for a markdown note with links.   
+Generates an outline for a note with links.   
 Relies on `[[wiki-link]]` format to find related notes.
 
 For example with 3 levels depth (note -> links -> links of links)(The Archive app):

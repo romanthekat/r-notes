@@ -10,6 +10,11 @@ import (
 
 const BacklinksHeader = "## Backlinks"
 
+//TODO more reliable parsing would be beneficial
+func IsMarkdownHeader(line string) bool {
+	return strings.HasPrefix("# ", line) || strings.HasPrefix("## ", line) || strings.HasPrefix("### ", line)
+}
+
 func IsBacklinksHeader(line string) bool {
 	return strings.TrimSpace(line) == BacklinksHeader
 }
@@ -51,6 +56,64 @@ func FillLinks(notes []*Note) []*Note {
 	}
 
 	return notes
+}
+
+func SaveBacklinksInFiles(notes []*Note) {
+	for _, note := range notes {
+		content, err := generateContentWithBacklinks(note)
+		if err != nil {
+			log.Printf("[ERROR][%s] skip file due to error: %s\n", GetNoteLink(note), err)
+			continue
+		}
+
+		WriteToFile(note.Path, content)
+	}
+}
+
+func generateContentWithBacklinks(note *Note) ([]string, error) {
+	backlinksContent := generateBacklinksContent(note)
+
+	backlinksHeaderExists, backlinksHeaderIdx, err := findBacklinkHeader(note)
+	if err != nil {
+		return nil, err
+	}
+
+	content := append([]string{}, note.GetContent()...)
+
+	copyUntilIdx := len(content)
+	if backlinksHeaderExists {
+		copyUntilIdx = backlinksHeaderIdx
+	}
+
+	content = append(content[:copyUntilIdx], backlinksContent...)
+	return content, nil
+}
+
+func generateBacklinksContent(note *Note) []string {
+	backlinksContent := []string{BacklinksHeader}
+
+	for _, backlink := range note.Backlinks {
+		backlinksContent = append(backlinksContent, "- "+GetNoteLink(backlink))
+	}
+
+	return backlinksContent
+}
+
+func findBacklinkHeader(note *Note) (found bool, index int, err error) {
+	for i, line := range note.GetContent() {
+		if IsBacklinksHeader(line) {
+			found = true
+			index = i
+			continue
+		}
+
+		if found && IsMarkdownHeader(line) {
+			return found, index, fmt.Errorf("there is a markdown header after backlinks header - structure is incorrect")
+		}
+	}
+
+	return found, index, nil
+
 }
 
 //getWikiLinks extracts [[LINK]] from provided Note content

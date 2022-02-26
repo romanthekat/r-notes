@@ -43,7 +43,7 @@ func TestGetNoteLink(t *testing.T) {
 		{
 			name: "wikilinks based link",
 			args: args{
-				note: NewNote("202202261406", "A name", "", []string{}, nil),
+				note: NewNote("202202261406", "A name", "", []string{}),
 			},
 			want: "A name [[202202261406]]",
 		},
@@ -60,9 +60,9 @@ func TestGetNoteLink(t *testing.T) {
 //TODO cover more cases
 func TestFillLinks(t *testing.T) {
 	notes := []*Note{
-		NewNote("202202261406", "Note one", "", []string{"[[202202261407]]", "[[202202261408]]"}, nil),
-		NewNote("202202261407", "Note two", "", []string{"[[202202261406]]"}, nil),
-		NewNote("202202261408", "Note three", "", []string{"[[202202261407]]"}, nil),
+		NewNote("202202261406", "Note one", "", []string{"[[202202261407]]", "[[202202261408]]"}),
+		NewNote("202202261407", "Note two", "", []string{"[[202202261406]]"}),
+		NewNote("202202261408", "Note three", "", []string{"[[202202261407]]"}),
 	}
 
 	notes = FillLinks(notes)
@@ -102,4 +102,54 @@ func hasLinks(notes []*Note, ids ...string) bool {
 	}
 
 	return true
+}
+
+func Test_generateContentWithBacklinks(t *testing.T) {
+	type args struct {
+		note *Note
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []string
+		wantErr bool
+	}{
+		{
+			name: "note without backlinks",
+			args: args{
+				note: NewNoteWithLinks("202202261746",
+					"Note without backlinks",
+					"",
+					[]string{
+						"# Note without backlinks",
+						"line one",
+						"line two"},
+					nil,
+					[]*Note{
+						NewNote("202202261747", "The backlink", "", nil),
+					},
+				),
+			},
+			want: []string{
+				"# Note without backlinks",
+				"line one",
+				"line two",
+				BacklinksHeader,
+				"- The backlink [[202202261747]]",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := generateContentWithBacklinks(tt.args.note)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("generateContentWithBacklinks() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("generateContentWithBacklinks() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
