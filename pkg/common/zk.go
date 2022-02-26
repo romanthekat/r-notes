@@ -49,17 +49,19 @@ func ParseNoteFilename(filename string) (isZettel bool, id, name string) {
 		return false, "", ""
 	}
 
+	id = strings.TrimSpace(id)
 	name = strings.TrimLeft(filename, id)
-	name = strings.Trim(name, " ")
+	name = strings.TrimSpace(name)
+
 	return true, id, name
 }
 
-func GetYamlHeader(id string, name string) []string {
+func GetYamlHeader(id, name, tags string) []string {
 	return []string{
 		"---",
 		"title: " + strings.ToLower(name),
 		"date: " + FormatIdAsIsoDate(id),
-		"tags: ",
+		"tags: " + tags,
 		"---",
 	}
 }

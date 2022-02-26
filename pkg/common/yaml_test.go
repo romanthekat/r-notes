@@ -142,7 +142,7 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 			args: struct {
 				path    Path
 				content []string
-			}{path: "/some/path/file.md", content: []string{
+			}{path: "/some/Path/file.md", content: []string{
 				"---",
 				"title: ",
 				"date: ",
@@ -168,7 +168,7 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 			args: struct {
 				path    Path
 				content []string
-			}{path: "/some/path/file.md", content: []string{
+			}{path: "/some/Path/file.md", content: []string{
 				"# header",
 				"some value",
 				"---",

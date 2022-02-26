@@ -21,7 +21,7 @@ func main() {
 	var result []string
 	for _, path := range paths {
 		note := common.NewNoteByPath(path)
-		if note.Id != "" {
+		if note.HasId() {
 			result = append(result, fmt.Sprintf("[[%s]] %s", note.Id, note.Name))
 		}
 	}

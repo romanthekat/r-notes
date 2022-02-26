@@ -41,8 +41,8 @@ func main() {
 	resultId, resultPath := getResultPath(path, indexTitle)
 	fmt.Printf("writing to %s\n", resultPath)
 
-	resultContent := common.GetYamlHeader(resultId, indexTitle)
-	resultContent = append(resultContent, fmt.Sprintf("# %s %s", resultId, indexTitle), tag)
+	resultContent := common.GetYamlHeader(resultId, indexTitle, tag)
+	resultContent = append(resultContent, fmt.Sprintf("# %s %s", resultId, indexTitle))
 	resultContent = append(resultContent, outline...)
 
 	common.WriteToFile(resultPath, resultContent)
@@ -75,14 +75,9 @@ func parseNoteHierarchy(path common.Path, paths []common.Path, levelsLeft int) *
 		return nil
 	}
 
-	content, err := common.ReadFile(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	note := common.NewNoteByPath(path)
 
-	linkedFiles := common.GetFilesByWikiLinks(path, paths, common.GetWikiLinks(content))
+	linkedFiles := common.GetFilesByWikiLinks(path, paths, common.GetWikiLinks(note.GetContent()))
 	for _, linkedFile := range linkedFiles {
 		child := parseNoteHierarchy(linkedFile, paths, levelsLeft-1)
 		if child != nil {

@@ -2,36 +2,44 @@ package common
 
 import (
 	"fmt"
-	"regexp"
-	"strings"
+	"log"
 	"sync"
 )
 
 type Note struct {
 	Id   string
 	Name string
-	Path Path
 
-	//Backlinks *[]Note //TODO implement
-	Links []*Note
-
-	load    *sync.Once
 	Content []string
+
+	Links     []*Note
+	Backlinks []*Note
+
+	Path        Path
+	loadContent *sync.Once
 }
 
-func (n Note) String() string {
-	return n.Name
+func (n *Note) String() string {
+	return GetNoteLink(n)
 }
 
-func NewNote(id, name string, path Path, Links []*Note) *Note {
-	return &Note{Id: id, Name: name, Path: path, Links: Links}
+func NewNote(id, name string, path Path, content []string, Links []*Note) *Note {
+	return &Note{Id: id, Name: name, Path: path, Links: Links, Content: content, loadContent: &sync.Once{}}
+}
+
+func (n *Note) HasId() bool {
+	return n.Id != ""
 }
 
 func (n *Note) GetContent() []string {
-	n.load.Do(func() {
+	n.loadContent.Do(func() {
+		if n.Content != nil {
+			return
+		}
+
 		content, err := ReadFile(n.Path)
 		if err != nil {
-			panic(fmt.Sprintf("can't load file %s content: %s", n, err))
+			panic(fmt.Sprintf("can't loadContent file %s content: %s", n, err))
 		}
 
 		n.Content = content
@@ -40,50 +48,25 @@ func (n *Note) GetContent() []string {
 	return n.Content
 }
 
-//GetFilesByWikiLinks parses wikilinks of a note and returns paths to correspondent files
-//TODO Trie would be much better
-func GetFilesByWikiLinks(currentPath Path, paths []Path, wikiLinks []string) []Path {
-	var linkedFiles []Path
+func NewNotesByPaths(paths []Path) []*Note {
+	var notes []*Note
 
 	for _, path := range paths {
-		for _, link := range wikiLinks {
-			if path != currentPath && strings.Contains(string(path), link) {
-				linkedFiles = append(linkedFiles, path)
-			}
+		note := NewNoteByPath(path)
+		if !note.HasId() {
+			log.Printf("[ERROR] note with Path '%s' has no id - skipping it\n", note.Path)
+			continue
 		}
+
+		notes = append(notes, note)
 	}
 
-	return linkedFiles
-}
-
-//GetWikiLinks extracts [[LINK]] from provided path content
-//TODO make sure to guarantee order
-func GetWikiLinks(content []string) []string {
-	set := make(map[string]struct{})        //lack of golang sets ;(
-	re := regexp.MustCompile(`\[\[(.+?)]]`) //TODO compile once for app rather than once per path
-
-	for _, line := range content {
-		for _, match := range re.FindAllStringSubmatch(line, -1) {
-			link := strings.TrimSpace(match[1])
-			set[link] = struct{}{}
-		}
-	}
-
-	var links []string
-	for link := range set {
-		links = append(links, link)
-	}
-
-	return links
-}
-
-func GetNoteLink(note *Note) string {
-	return fmt.Sprintf("%s [[%s]]", note.Name, note.Id)
+	return notes
 }
 
 func NewNoteByPath(path Path) *Note {
 	isZettel, id, name := ParseNoteFilename(GetFilename(path))
-	note := NewNote(id, name, path, nil)
+	note := NewNote(id, name, path, []string{}, nil)
 
 	if isZettel && len(name) != 0 {
 		return note

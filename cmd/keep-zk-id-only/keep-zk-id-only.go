@@ -38,7 +38,7 @@ func main() {
 			panic(err)
 		}
 
-		header := common.GetYamlHeader(id, name)
+		header := common.GetYamlHeader(id, name, "")
 
 		common.WriteToFile(path, append(header, content...))
 
