@@ -33,7 +33,7 @@ func FillLinks(notes []*Note) []*Note {
 	}
 
 	for _, note := range notes {
-		linksIds := getWikiLinks(note.GetContent())
+		linksIds := getWikilinks(note.GetContent())
 
 		for _, linkId := range linksIds {
 			linkedNote := notesById[linkId]
@@ -116,11 +116,11 @@ func findBacklinkHeader(note *Note) (found bool, index int, err error) {
 
 }
 
-//getWikiLinks extracts [[LINK]] from provided Note content
+//getWikilinks extracts [[LINK]] from provided Note content
 //TODO guarantee order
-func getWikiLinks(content []string) []string {
+func getWikilinks(content []string) []string {
 	set := make(map[string]struct{})
-	re := regexp.MustCompile(`\[\[([A-Za-z]+?)]]`) //TODO compile once for app rather than once per Path
+	re := regexp.MustCompile(`\[\[([A-Za-z0-9]+?[ ]?[A-Za-z0-9]+?)]]`) //TODO compile once for app rather than once per Patha
 
 	for _, line := range content {
 		if IsBacklinksHeader(line) {

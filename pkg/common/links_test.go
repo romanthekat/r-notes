@@ -17,15 +17,22 @@ func Test_getWikiLinks(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				content: []string{"text [[link1]] and", "[[link2]] another link", "duplicate [[link1]] "},
+				content: []string{
+					"text [[202202261908]] and",
+					"[[202202261909]] another link",
+					"duplicate [[202202261909]] ",
+					"[[202202261910]]",
+					"[[text link]]",
+					"[[ broken link]]",
+				},
 			},
-			want: []string{"link1", "link2"},
+			want: []string{"202202261908", "202202261909", "202202261910", "text link"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getWikiLinks(tt.args.content); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getWikiLinks() = %v, want %v", got, tt.want)
+			if got := getWikilinks(tt.args.content); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("getWikilinks() = %v, want %v", got, tt.want)
 			}
 		})
 	}
