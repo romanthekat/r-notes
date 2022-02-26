@@ -100,8 +100,12 @@ func TestFillLinks(t *testing.T) {
 	note2 := notes[1]
 	note3 := notes[2]
 
-	okLinks := hasLinks(note1.Links, note2.Id, note3.Id) && hasLinks(note2.Links, note1.Id) && hasLinks(note3.Links, note2.Id)
-	okBacklinks := hasLinks(note1.Backlinks, note2.Id) && hasLinks(note2.Backlinks, note1.Id, note3.Id) && hasLinks(note3.Backlinks, note1.Id)
+	okLinks := hasLinks(note1.Links, note2.Id, note3.Id) &&
+		hasLinks(note2.Links, note1.Id) &&
+		hasLinks(note3.Links, note2.Id)
+	okBacklinks := hasLinks(note1.Backlinks, note2.Id) &&
+		hasLinks(note2.Backlinks, note1.Id, note3.Id) &&
+		hasLinks(note3.Backlinks, note1.Id)
 
 	if !(okLinks && okBacklinks) {
 		t.Errorf("filling (back)links doesn't work, links cycle broken:\n%+v\n%+v\n%+v\n", note1, note2, note3)
@@ -109,6 +113,10 @@ func TestFillLinks(t *testing.T) {
 }
 
 func hasLinks(notes []*Note, ids ...string) bool {
+	if len(notes) != len(ids) {
+		return false
+	}
+
 	notesSet := make(map[string]struct{})
 
 	for _, note := range notes {
