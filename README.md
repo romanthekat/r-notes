@@ -9,13 +9,14 @@ For example with 3 levels depth (note -> links -> links of links)(The Archive ap
 ![outliner.png](outliner.png)
 
 ### Install
+
 `go install github.com/romanthekat/r-notes/cmd/outliner@latest`
 
 ### Build manually
 
 `go build ./cmd/outliner/`  
 `go install ./cmd/outliner/`  
-`go run ./cmd/outliner/`  
+`go run ./cmd/outliner/`
 
 `go test ./cmd/outliner/`
 

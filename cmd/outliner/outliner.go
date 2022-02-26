@@ -20,23 +20,37 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("generating outline for path", path)
+	_, id, _ := common.ParseNoteFilename(common.GetFilename(path))
 
-	otherFiles, err := common.GetNotesPaths(folder, common.MdExtension)
+	notesPaths, err := common.GetNotesPaths(folder, common.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("found .md files:", len(otherFiles))
+	log.Println("found .md files:", len(notesPaths))
 	log.Println("parsing links")
 
-	top := parseNoteHierarchy(path, otherFiles, 3)
+	notes := common.NewNotesByPaths(notesPaths)
+	common.FillLinks(notes)
+
+	var targetNote *common.Note
+	for _, note := range notes {
+		if note.Id == id {
+			targetNote = note
+			break
+		}
+	}
+	if targetNote == nil {
+		log.Fatal("provided note path wasn't correctly parsed as a zk note")
+	}
+
 	log.Printf("outline:\n")
 
-	outline := getNotesOutline(top, "", nil)
+	outline := getNotesOutline(targetNote, "", 3, nil)
 	for _, line := range outline {
 		fmt.Println(line)
 	}
 
-	indexTitle := fmt.Sprintf("index for '%s'", top.Name)
+	indexTitle := fmt.Sprintf("index for '%s'", targetNote.Name)
 
 	resultId, resultPath := getResultPath(path, indexTitle)
 	fmt.Printf("writing to %s\n", resultPath)
@@ -55,8 +69,11 @@ func getResultPath(path common.Path, title string) (id string, resultPath common
 		fmt.Sprintf("%s/%s %s.md", basePath, zkId, title))
 }
 
-//TODO iterative version would be better, but lack of stdlib queue would decrease readability
-func getNotesOutline(note *common.Note, padding string, result []string) []string {
+func getNotesOutline(note *common.Note, padding string, levelsLeft int, result []string) []string {
+	if levelsLeft == 0 {
+		return result
+	}
+
 	if note == nil {
 		return result
 	}
@@ -64,26 +81,8 @@ func getNotesOutline(note *common.Note, padding string, result []string) []strin
 	noteLink := common.GetNoteLink(note)
 	result = append(result, fmt.Sprintf("%s- %s%s", padding, noteLink, markdownLineBreak))
 	for _, child := range note.Links {
-		result = getNotesOutline(child, padding+notesDelimiter, result)
+		result = getNotesOutline(child, padding+notesDelimiter, levelsLeft-1, result)
 	}
 
 	return result
-}
-
-func parseNoteHierarchy(path common.Path, paths []common.Path, levelsLeft int) *common.Note {
-	if levelsLeft == 0 {
-		return nil
-	}
-
-	note := common.NewNoteByPath(path)
-
-	linkedFiles := common.GetFilesByWikiLinks(path, paths, common.GetWikiLinks(note.GetContent()))
-	for _, linkedFile := range linkedFiles {
-		child := parseNoteHierarchy(linkedFile, paths, levelsLeft-1)
-		if child != nil {
-			note.Links = append(note.Links, child)
-		}
-	}
-
-	return note
 }

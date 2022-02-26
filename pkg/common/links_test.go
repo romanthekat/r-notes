@@ -5,35 +5,6 @@ import (
 	"testing"
 )
 
-func Test_getFilesByWikilinks(t *testing.T) {
-	type args struct {
-		currentFile Path
-		files       []Path
-		wikiLinks   []string
-	}
-	tests := []struct {
-		name string
-		args args
-		want []Path
-	}{
-		{
-			name: "main",
-			args: args{
-				currentFile: "path.md",
-				files:       []Path{"path.md", "first.md", "second.md", "third.md"},
-				wikiLinks:   []string{"first", "third"}},
-			want: []Path{"first.md", "third.md"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := GetFilesByWikiLinks(tt.args.currentFile, tt.args.files, tt.args.wikiLinks); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getFilesByWikiLinks() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_getWikiLinks(t *testing.T) {
 	type args struct {
 		content []string
@@ -53,8 +24,8 @@ func Test_getWikiLinks(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := GetWikiLinks(tt.args.content); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetWikiLinks() = %v, want %v", got, tt.want)
+			if got := getWikiLinks(tt.args.content); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("getWikiLinks() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -18,6 +18,7 @@ func GetNoteLink(note *Note) string {
 	return fmt.Sprintf("%s [[%s]]", note.Name, note.Id)
 }
 
+// FillLinks TODO make links context aware - file line at least
 func FillLinks(notes []*Note) []*Note {
 	notesById := make(map[string]*Note)
 
@@ -27,7 +28,7 @@ func FillLinks(notes []*Note) []*Note {
 	}
 
 	for _, note := range notes {
-		linksIds := GetWikiLinks(note.GetContent())
+		linksIds := getWikiLinks(note.GetContent())
 
 		for _, linkId := range linksIds {
 			linkedNote := notesById[linkId]
@@ -52,27 +53,10 @@ func FillLinks(notes []*Note) []*Note {
 	return notes
 }
 
-//GetFilesByWikiLinks parses wikilinks of a note and returns paths to correspondent files
-//Deprecated: this low level abstraction should be replaced by FillLinks and `[]*Note` structs
-func GetFilesByWikiLinks(currentPath Path, paths []Path, wikiLinks []string) []Path {
-	var linkedFiles []Path
-
-	for _, path := range paths {
-		for _, link := range wikiLinks {
-			if path != currentPath && strings.Contains(string(path), link) {
-				linkedFiles = append(linkedFiles, path)
-			}
-		}
-	}
-
-	return linkedFiles
-}
-
-//GetWikiLinks extracts [[LINK]] from provided Path content
+//getWikiLinks extracts [[LINK]] from provided Note content
 //TODO guarantee order
-//Deprecated: either deprecate or make private level
-func GetWikiLinks(content []string) []string {
-	set := make(map[string]struct{})        //lack sets ;(
+func getWikiLinks(content []string) []string {
+	set := make(map[string]struct{})
 	re := regexp.MustCompile(`\[\[(.+?)]]`) //TODO compile once for app rather than once per Path
 
 	for _, line := range content {
