@@ -42,7 +42,7 @@ func (n *Note) HasId() bool {
 
 func (n *Note) GetContent() []string {
 	n.loadContent.Do(func() {
-		if n.Content != nil {
+		if len(n.Content) > 0 {
 			return
 		}
 
@@ -81,9 +81,13 @@ func NewNoteByPath(path Path) *Note {
 		return note
 	}
 
+	if !isZettel {
+		return note
+	}
+
 	name, err := GetNoteNameByNoteContent(note.GetContent())
 	if err != nil {
-		panic(err)
+		log.Fatalf("[ERROR] error during parsing note in path '%s': %s", path, err)
 	}
 
 	note.Name = name

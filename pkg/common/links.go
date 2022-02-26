@@ -12,7 +12,7 @@ const BacklinksHeader = "## Backlinks"
 
 //TODO more reliable parsing would be beneficial
 func IsMarkdownHeader(line string) bool {
-	return strings.HasPrefix("# ", line) || strings.HasPrefix("## ", line) || strings.HasPrefix("### ", line)
+	return strings.HasPrefix(line, "# ") || strings.HasPrefix(line, "## ") || strings.HasPrefix(line, "### ")
 }
 
 func IsBacklinksHeader(line string) bool {
@@ -38,7 +38,7 @@ func FillLinks(notes []*Note) []*Note {
 		for _, linkId := range linksIds {
 			linkedNote := notesById[linkId]
 			if linkedNote == nil {
-				log.Printf("[ERROR] note '%s' has broken link to id '%s'\n", note.Id, linkId)
+				log.Printf("[ERROR] note '%s' has broken link to id '%s'\n", GetNoteLink(note), linkId)
 				continue
 			}
 
@@ -62,7 +62,7 @@ func SaveBacklinksInFiles(notes []*Note) {
 	for _, note := range notes {
 		content, err := generateContentWithBacklinks(note)
 		if err != nil {
-			log.Printf("[ERROR][%s] skip file due to error: %s\n", GetNoteLink(note), err)
+			log.Printf("[ERROR] %s: skip file due to error: %s\n", GetNoteLink(note), err)
 			continue
 		}
 
@@ -107,7 +107,7 @@ func findBacklinkHeader(note *Note) (found bool, index int, err error) {
 			continue
 		}
 
-		if found && IsMarkdownHeader(line) {
+		if found && IsMarkdownHeader(line) && line != "## ..." {
 			return found, index, fmt.Errorf("there is a markdown header after backlinks header - structure is incorrect")
 		}
 	}
