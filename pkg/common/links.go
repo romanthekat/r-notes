@@ -120,7 +120,7 @@ func findBacklinkHeader(note *Note) (found bool, index int, err error) {
 //TODO guarantee order
 func getWikiLinks(content []string) []string {
 	set := make(map[string]struct{})
-	re := regexp.MustCompile(`\[\[(.+?)]]`) //TODO compile once for app rather than once per Path
+	re := regexp.MustCompile(`\[\[([A-Za-z]+?)]]`) //TODO compile once for app rather than once per Path
 
 	for _, line := range content {
 		if IsBacklinksHeader(line) {

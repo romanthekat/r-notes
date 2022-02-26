@@ -63,7 +63,7 @@ func NewNotesByPaths(paths []Path) []*Note {
 	for _, path := range paths {
 		note := NewNoteByPath(path)
 		if !note.HasId() {
-			log.Printf("[ERROR] note with Path '%s' has no id - skipping it\n", note.Path)
+			log.Printf("[INFO] note with Path '%s' has no id - skipping\n", note.Path)
 			continue
 		}
 
