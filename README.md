@@ -32,7 +32,6 @@ For example:
 `go install github.com/romanthekat/r-notes/cmd/regenerate-backlinks@latest`
 
 ---
-
 ### Sub-graph
 Renders subgraph by provided note file.
 
@@ -57,8 +56,6 @@ Usage of ./sub-graph:
 `go install github.com/romanthekat/r-notes/cmd/sub-graph@latest`
 
 ---
-
-
 ### Full-graph
 Renders graph of all notes within provided folder.  
 Please note, 700+ notes' graph will be somewhat big.
@@ -70,8 +67,16 @@ Please note, 700+ notes' graph will be somewhat big.
 `go install github.com/romanthekat/r-notes/cmd/full-graph@latest`
 
 ---
+### Unlinked
+Returns list of notes without (back)links.  
 
+#### Usage
+`unlinked "path/to/notes/folder"`
 
+#### Install
+`go install github.com/romanthekat/r-notes/cmd/unlinked@latest`
+
+---
 ### Outliner
 Generates an outline note for a note.  
 For example with 3 levels depth (note -> links -> links of links):
