@@ -68,7 +68,7 @@ Please note, 700+ notes' graph will be somewhat big.
 
 ---
 ### Unlinked
-Returns list of notes without (back)links.  
+Prints list of notes without (back)links.  
 
 #### Usage
 `unlinked "path/to/notes/folder"`
