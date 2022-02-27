@@ -49,6 +49,10 @@ Usage of ./sub-graph:
         a path to rendered graph file (default "./")
 ```
 
+#### Example
+`sub-graph -notePath="path/to/notes/202111271135 guitar.md" -outputPath="/tmp/sub-graph-example.png" -depth=1`
+![example output](./docs/sub-graph-example.png)
+
 #### Install
 `go install github.com/romanthekat/r-notes/cmd/sub-graph@latest`
 
