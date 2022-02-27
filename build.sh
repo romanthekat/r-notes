@@ -1,3 +1,15 @@
-GOOS=linux GOARCH=amd64 go build -o outliner_linux github.com/romanthekat/r-notes/cmd/outliner && \
-GOOS=darwin GOARCH=amd64 go build -o outliner_mac github.com/romanthekat/r-notes/cmd/outliner && \
-GOOS=windows GOARCH=amd64 go build -o outliner_win github.com/romanthekat/r-notes/cmd/outliner
+#!/usr/bin/env bash
+
+basePath="github.com/romanthekat/r-notes/cmd"
+
+for cmdPath in cmd/*/; do
+  cmdName=$(basename $cmdPath)
+  echo path - $cmdPath
+  echo name - $cmdName
+  echo ""
+
+  CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o "$cmdName"_linux "$basePath/$cmdName"
+  CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o "$cmdName"_mac "$basePath/$cmdName"
+  CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -o "$cmdName"_mac_arm "$basePath/$cmdName"
+  CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o "$cmdName"_win "$basePath/$cmdName"
+done
