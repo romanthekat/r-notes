@@ -133,4 +133,4 @@ tags: #index
 
 #### Usage
 `outliner "path/to/note.md"`  
-will generate `/path/to/DATE_ZK_ID.md`
+will generate `/path/to/DATE_ZK_ID index for 'note title'.md`
