@@ -1,26 +1,36 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/romanthekat/r-notes/pkg/common"
 	"log"
+	"path/filepath"
 	"strings"
 )
 
 func main() {
-	log.Println("Obtaining notes")
-	note, _ := getNotes()
+	notePath, folderPath, graphDepth, outputPath, err := parseArguments()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("note path: %s\n", notePath)
+	log.Printf("graph output path: %s\n", outputPath)
+	log.Printf("graph depth: %d\n", graphDepth)
 
-	log.Println("Preparing graph")
+	log.Println("obtaining notes")
+	note, _ := getNotes(notePath, folderPath)
+
+	log.Println("preparing graph")
 	g, graph, finishFunc := common.InitGraphviz()
 	defer finishFunc()
 
-	log.Println("Creating map note to node")
 	noteToNodeMap := make(map[string]*cgraph.Node)
 
-	notes := getNotesForSubgraph(note, 2)
-	log.Println("Notes in graph: ", len(notes))
+	log.Println("getting notes for subgraph")
+	notes := getNotesForSubgraph(note, graphDepth)
+	log.Println("notes in graph:", len(notes))
 
 	for _, note := range notes {
 		noteToNodeMap[note.Id] = common.GetNode(graph, note.Name)
@@ -29,7 +39,6 @@ func main() {
 	node := noteToNodeMap[note.Id]
 	node.SetColor("red")
 
-	log.Println("Creating links edges")
 	for _, note := range notes {
 		for _, link := range note.Links {
 			linkNode := noteToNodeMap[link.Id]
@@ -39,10 +48,9 @@ func main() {
 		}
 	}
 
-	log.Println("Rendering to file")
-	graphPath := "/tmp/graph.png"
-	common.SaveGraphToFile(g, graph, graphPath)
-	log.Println("file saved to", graphPath)
+	log.Println("rendering to file")
+	common.SaveGraphToFile(g, graph, string(outputPath))
+	log.Println("graph saved to:", outputPath)
 }
 
 func getNotesForSubgraph(note *common.Note, levelsLeft int) []*common.Note {
@@ -89,18 +97,13 @@ func getNotesForSubgraphRecursive(note *common.Note, levelsLeft int, result map[
 	return result
 }
 
-func getNotes() (*common.Note, []*common.Note) {
-	file, folder, err := common.GetNoteFileArgument(common.MdExtension)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	isZettel, id, _ := common.ParseNoteFilename(common.GetFilename(file))
+func getNotes(notePath, folderPath common.Path) (*common.Note, []*common.Note) {
+	isZettel, id, _ := common.ParseNoteFilename(common.GetFilename(notePath))
 	if !isZettel {
-		log.Fatal(fmt.Errorf("provided note filename is note a correct zk note"))
+		log.Fatal(fmt.Errorf("provided note filename is not a correct zk note"))
 	}
 
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+	paths, err := common.GetNotesPaths(folderPath, common.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -121,4 +124,21 @@ func getNotes() (*common.Note, []*common.Note) {
 	}
 
 	return targetNote, notes
+}
+
+func parseArguments() (common.Path, common.Path, int, common.Path, error) {
+	notePath := flag.String("notePath", "", "a path to note file")
+	outputPath := flag.String("outputPath", "./", "a path to rendered graph file")
+	graphDepth := flag.Int("depth", 2, "graph depth to render")
+	flag.Parse()
+
+	if filepath.Ext(*notePath) != common.MdExtension {
+		return "", "", -1, "", fmt.Errorf("specify %s path for generating graph", common.MdExtension)
+	}
+
+	if *notePath == "" || *outputPath == "" {
+		return "", "", -1, "", fmt.Errorf("provide both 'notePath' and 'outputPath'")
+	}
+
+	return common.Path(*notePath), common.Path(filepath.Dir(*notePath)), *graphDepth, common.Path(*outputPath), nil
 }

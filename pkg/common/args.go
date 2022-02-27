@@ -8,12 +8,12 @@ import (
 
 func GetNoteFileArgument(extension string) (Path, Path, error) {
 	if len(os.Args) != 2 {
-		return "", "", fmt.Errorf("specify Path for generating outline")
+		return "", "", fmt.Errorf("specify notes path")
 	}
 
 	filename := os.Args[1]
 	if filepath.Ext(filename) != extension {
-		return "", "", fmt.Errorf("specify %s Path for generating outline", extension)
+		return "", "", fmt.Errorf("specify %s file path", extension)
 	}
 
 	return Path(filename), Path(filepath.Dir(filename)), nil

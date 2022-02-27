@@ -1,27 +1,33 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/romanthekat/r-notes/pkg/common"
 	"log"
+	"path/filepath"
 )
 
 //TODO seems to be too big on 700+ notes
 func main() {
-	log.Println("Obtaining notes")
-	notes := getNotes()
+	folder, outputPath, err := parseArguments()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	log.Println("Preparing graph")
+	log.Println("obtaining notes")
+	notes := getNotes(folder)
+
+	log.Println("preparing graph")
 	g, graph, finishFunc := common.InitGraphviz()
 	defer finishFunc()
 
-	log.Println("Creating map note to node")
 	noteToNodeMap := make(map[string]*cgraph.Node)
 	for _, note := range notes {
 		noteToNodeMap[note.Id] = common.GetNode(graph, note.Name)
 	}
 
-	log.Println("Creating links edges")
 	for _, note := range notes {
 		for _, link := range note.Links {
 			edge := common.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
@@ -29,18 +35,12 @@ func main() {
 		}
 	}
 
-	log.Println("Rendering to file")
-	graphPath := "/tmp/graph.png"
-	common.SaveGraphToFile(g, graph, graphPath)
-	log.Println("file saved to", graphPath)
+	log.Println("rendering to file")
+	common.SaveGraphToFile(g, graph, string(outputPath))
+	log.Println("file saved to", outputPath)
 }
 
-func getNotes() []*common.Note {
-	folder, err := common.GetNotesFolderArg()
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func getNotes(folder common.Path) []*common.Note {
 	paths, err := common.GetNotesPaths(folder, common.MdExtension)
 	if err != nil {
 		log.Fatal(err)
@@ -50,4 +50,20 @@ func getNotes() []*common.Note {
 	common.FillLinks(notes)
 
 	return notes
+}
+
+func parseArguments() (common.Path, common.Path, error) {
+	notesPath := flag.String("notesPath", "", "a path to notes folder")
+	outputPath := flag.String("outputPath", "./", "a path to rendered graph file")
+	flag.Parse()
+
+	if filepath.Ext(*notesPath) != common.MdExtension {
+		return "", "", fmt.Errorf("specify %s path for generating graph", common.MdExtension)
+	}
+
+	if *notesPath == "" || *outputPath == "" {
+		return "", "", fmt.Errorf("provide both 'notesPath' and 'outputPath'")
+	}
+
+	return common.Path(*notesPath), common.Path(*outputPath), nil
 }
