@@ -73,7 +73,7 @@ Please note, 700+ notes' graph will be somewhat big.
 
 
 ### Outliner
-Generates an outline for a note with links.  
+Generates an outline note for a note.  
 For example with 3 levels depth (note -> links -> links of links):
 ```
 ---
