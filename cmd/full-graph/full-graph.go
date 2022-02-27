@@ -6,22 +6,19 @@ import (
 	"log"
 )
 
-//TODO seems to be too big for real notes storage of mine :(
+//TODO seems to be too big on 700+ notes
 func main() {
 	log.Println("Obtaining notes")
 	notes := getNotes()
 
 	log.Println("Preparing graph")
 	g, graph, finishFunc := common.InitGraphviz()
-
 	defer finishFunc()
 
 	log.Println("Creating map note to node")
 	noteToNodeMap := make(map[string]*cgraph.Node)
 	for _, note := range notes {
-		if len(note.Links) > 0 || len(note.Backlinks) > 0 {
-			noteToNodeMap[note.Id] = common.GetNode(graph, note.Name)
-		}
+		noteToNodeMap[note.Id] = common.GetNode(graph, note.Name)
 	}
 
 	log.Println("Creating links edges")
