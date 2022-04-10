@@ -9,7 +9,10 @@ import (
 // FillTags adds tags information to notes
 func FillTags(notes []*Note) []*Note {
 	for _, note := range notes {
-		tags := getTags(note.GetContent())
+		tags := make(map[string]any)
+		for _, tag := range getTags(note.GetContent()) {
+			tags[tag] = struct{}{}
+		}
 
 		note.Tags = tags
 	}
