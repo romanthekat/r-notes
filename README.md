@@ -43,7 +43,7 @@ Usage of ./sub-graph:
   -depth int
         graph depth to render (default 2)
   -ignoreTags string
-    	comma seperated list of tags to ignore notes with
+    	comma seperated list of tags which is used to ignore/filter notes
   -notePath string
         a path to note file
   -outputPath string

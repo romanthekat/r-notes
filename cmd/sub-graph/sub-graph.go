@@ -138,7 +138,7 @@ func parseArguments() (common.Path, common.Path, int, []string, common.Path, err
 	notePath := flag.String("notePath", "", "a path to note file")
 	outputPath := flag.String("outputPath", "./", "a path to rendered graph file")
 	graphDepth := flag.Int("depth", 2, "graph depth to render")
-	ignoreTags := flag.String("ignoreTags", "", "comma seperated list of tags to ignore notes with")
+	ignoreTags := flag.String("ignoreTags", "", "comma seperated list of tags which is used to ignore/filter notes")
 	flag.Parse()
 
 	if filepath.Ext(*notePath) != common.MdExtension {
