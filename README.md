@@ -79,6 +79,16 @@ Prints list of notes without (back)links.
 `go install github.com/romanthekat/r-notes/cmd/unlinked@latest`
 
 ---
+### Tags cloud
+Prints list of tags ordered by popularity.
+
+#### Usage
+`tags-cloud "path/to/notes/folder"`
+
+#### Install
+`go install github.com/romanthekat/r-notes/cmd/tags-cloud@latest`
+
+---
 ### Outliner
 Generates an outline note for a note.  
 For example with 3 levels depth (note -> links -> links of links):

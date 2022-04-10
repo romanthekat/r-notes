@@ -26,7 +26,7 @@ func FillTags(notes []*Note) []*Note {
 func getTags(content []string) []string {
 	set := make(map[string]struct{})
 
-	re := regexp.MustCompile(`#([A-Za-z0-9\-_]+)`) //TODO once per app
+	re := regexp.MustCompile(`\B#([A-Za-z0-9\-_]+)`) //TODO once per app
 
 	for _, line := range content {
 		for _, match := range re.FindAllStringSubmatch(line, -1) {

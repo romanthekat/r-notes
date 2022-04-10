@@ -26,6 +26,7 @@ func Test_getTags(t *testing.T) {
 			args: args{
 				content: []string{"# some header", "some body line",
 					" text #tag1 and then #tag2", "some link [meow]",
+					"not#tag",
 					"ururu #tag-with_symbols hm"},
 			},
 			want: []string{"tag-with_symbols", "tag1", "tag2"},
