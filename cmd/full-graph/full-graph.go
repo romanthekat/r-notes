@@ -48,6 +48,7 @@ func getNotes(folder common.Path) []*common.Note {
 
 	notes := common.NewNotesByPaths(paths)
 	common.FillLinks(notes)
+	common.FillTags(notes)
 
 	return notes
 }

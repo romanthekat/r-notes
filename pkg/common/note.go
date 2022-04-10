@@ -15,6 +15,8 @@ type Note struct {
 	Links     []*Note
 	Backlinks []*Note
 
+	Tags []string
+
 	Path        Path
 	loadContent *sync.Once
 }
@@ -32,6 +34,14 @@ func NewNoteWithLinks(id, name string, path Path, content []string, links []*Not
 
 	note.Links = links
 	note.Backlinks = backlinks
+
+	return note
+}
+
+func NewNoteWithTags(id, name string, path Path, content []string, tags []string) *Note {
+	note := NewNote(id, name, path, content)
+
+	note.Tags = tags
 
 	return note
 }

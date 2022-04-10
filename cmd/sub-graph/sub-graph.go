@@ -110,6 +110,7 @@ func getNotes(notePath, folderPath common.Path) (*common.Note, []*common.Note) {
 
 	notes := common.NewNotesByPaths(paths)
 	common.FillLinks(notes)
+	common.FillTags(notes)
 
 	var targetNote *common.Note
 	for _, note := range notes {

@@ -117,10 +117,9 @@ func findBacklinkHeader(note *Note) (found bool, index int, err error) {
 }
 
 //getWikilinks extracts [[LINK]] from provided Note content
-//TODO guarantee order
 func getWikilinks(content []string) []string {
 	set := make(map[string]struct{})
-	re := regexp.MustCompile(`\[\[([A-Za-z0-9]+?[ ]?[A-Za-z0-9]+?)]]`) //TODO compile once for app rather than once per Patha
+	re := regexp.MustCompile(`\[\[([A-Za-z0-9]+?[A-Za-z0-9 ]+?)]]`) //TODO compile once for app
 
 	for _, line := range content {
 		if IsBacklinksHeader(line) {
@@ -137,6 +136,8 @@ func getWikilinks(content []string) []string {
 	for link := range set {
 		links = append(links, link)
 	}
+
+	sort.Strings(links)
 
 	return links
 }
