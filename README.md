@@ -42,6 +42,8 @@ Renders subgraph by provided note file.
 Usage of ./sub-graph:
   -depth int
         graph depth to render (default 2)
+  -ignoreTags string
+    	comma seperated list of tags to ignore notes with
   -notePath string
         a path to note file
   -outputPath string
