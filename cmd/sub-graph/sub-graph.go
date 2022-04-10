@@ -80,10 +80,6 @@ func getNotesForSubgraphRecursive(note *common.Note, levelsLeft int, ignoreTags 
 		}
 	}
 
-	if strings.HasPrefix(note.Name, "index for '") {
-		return result
-	}
-
 	result[note] = struct{}{}
 	var addedNotes []*common.Note
 
