@@ -35,7 +35,7 @@ func main() {
 	})
 
 	for _, tag := range tags {
-		fmt.Printf("%s\t%d\n", tag, tagsMap[tag])
+		fmt.Printf("%s x%d\n", tag, tagsMap[tag])
 	}
 }
 
