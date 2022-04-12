@@ -8,6 +8,7 @@ import (
 )
 
 // FillTags adds tags information to notes
+//TODO consider creating benchmarks
 func FillTags(notes []*Note) []*Note {
 	var wg sync.WaitGroup
 	wg.Add(len(notes))

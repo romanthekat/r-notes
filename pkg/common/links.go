@@ -25,6 +25,7 @@ func GetNoteLink(note *Note) string {
 }
 
 // FillLinks TODO make links context aware - file line at least
+//TODO consider creating benchmarks
 func FillLinks(notes []*Note) []*Note {
 	notesById := make(map[string]*Note)
 
