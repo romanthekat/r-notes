@@ -4,20 +4,30 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"sync"
 )
 
 // FillTags adds tags information to notes
 func FillTags(notes []*Note) []*Note {
+	var wg sync.WaitGroup
+	wg.Add(len(notes))
 	for _, note := range notes {
-		tags := make(map[string]any)
-		for _, tag := range getTags(note.GetContent()) {
-			tags[tag] = struct{}{}
-		}
-
-		note.Tags = tags
+		go fillTags(note, &wg)
 	}
+	wg.Wait()
 
 	return notes
+}
+
+func fillTags(note *Note, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	tags := make(map[string]any)
+	for _, tag := range getTags(note.GetContent()) {
+		tags[tag] = struct{}{}
+	}
+
+	note.Tags = tags
 }
 
 //getTags extracts #TAG from provided Note content
