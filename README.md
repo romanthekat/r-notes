@@ -9,6 +9,7 @@ A tool relies on `[[wiki-link]]` format to find related notes.
 `go install ./cmd/CMD/`  
 `go run ./cmd/CMD/`
 
+---
 ### Regenerate-backlinks
 Recalculates backlinks for notes, updates files appending the result to the end of a file.   
 For example:
