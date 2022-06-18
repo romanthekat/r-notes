@@ -26,10 +26,11 @@ func Test_getWikiLinks(t *testing.T) {
 					"[[text link three spaces]]",
 					"[[202204101811]] and then [[202204101812]]",
 					"[[ broken link]]",
+					"[[202206182033 link with title]]",
 				},
 			},
 			want: []string{"202202261908", "202202261909", "202202261910",
-				"202204101811", "202204101812", "text link", "text link three spaces"},
+				"202204101811", "202204101812", "202206182033", "text link", "text link three spaces"},
 		},
 	}
 	for _, tt := range tests {
@@ -55,7 +56,7 @@ func TestGetNoteLink(t *testing.T) {
 			args: args{
 				note: NewNote("202202261406", "A name", "", []string{}),
 			},
-			want: "A name [[202202261406]]",
+			want: "[[202202261406 A name]]",
 		},
 	}
 	for _, tt := range tests {
@@ -145,7 +146,7 @@ func Test_generateContentWithBacklinks(t *testing.T) {
 				"line one",
 				"line two",
 				BacklinksHeader,
-				"- The backlink [[202202261747]]",
+				"- [[202202261747 The backlink]]",
 			},
 			wantErr: false,
 		},

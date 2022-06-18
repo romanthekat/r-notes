@@ -20,11 +20,15 @@ func Test_getNotesOutline(t *testing.T) {
 		{
 			name: "main",
 			args: args{
-				note:    common.NewNote("202105122138", "note", "/path/to/202105122138 note.md", []string{""}),
+				note: common.NewNoteWithLinks("202105122138", "note", "/path/to/202105122138 note.md", []string{""},
+					[]*common.Note{
+						common.NewNote("202105122139", "child", "", []string{""}),
+					},
+					nil),
 				padding: "",
 				result:  []string{},
 			},
-			want: []string{"- note [[202105122138]]  ", "    - child [[202105122139]]  "},
+			want: []string{"- [[202105122138 note]]  ", "    - [[202105122139 child]]  "},
 		},
 	}
 	for _, tt := range tests {

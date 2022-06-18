@@ -21,7 +21,7 @@ func IsBacklinksHeader(line string) bool {
 }
 
 func GetNoteLink(note *Note) string {
-	return fmt.Sprintf("%s [[%s]]", note.Name, note.Id)
+	return fmt.Sprintf("[[%s %s]]", note.Id, note.Name)
 }
 
 // FillLinks TODO make links context aware - file line at least
@@ -139,6 +139,13 @@ func getWikilinks(content []string) []string {
 
 		for _, match := range re.FindAllStringSubmatch(line, -1) {
 			link := strings.TrimSpace(match[1])
+
+			isFullFormat, id := isLinkFullFormat(link)
+			if isFullFormat {
+				set[id] = struct{}{}
+				continue
+			}
+
 			set[link] = struct{}{}
 		}
 	}
@@ -151,4 +158,15 @@ func getWikilinks(content []string) []string {
 	sort.Strings(links)
 
 	return links
+}
+
+func isLinkFullFormat(link string) (bool, string) {
+	if strings.Contains(link, " ") {
+		parts := strings.Split(link, " ")
+		if len(parts) > 0 && IsZkId(parts[0]) {
+			return true, parts[0]
+		}
+	}
+
+	return false, ""
 }
