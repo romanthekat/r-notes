@@ -6,12 +6,11 @@ import (
 	"regexp"
 	"sort"
 	"strings"
-	"sync"
 )
 
 const BacklinksHeader = "## Backlinks"
 
-//IsMarkdownHeader TODO more reliable parsing would be beneficial
+//TODO more reliable parsing would be beneficial
 func IsMarkdownHeader(line string) bool {
 	return strings.HasPrefix(line, "# ") || strings.HasPrefix(line, "## ") || strings.HasPrefix(line, "### ")
 }
@@ -34,39 +33,30 @@ func FillLinks(notes []*Note) []*Note {
 		notesById[note.Id] = note
 	}
 
-	var wg sync.WaitGroup
-	wg.Add(len(notes))
 	for _, note := range notes {
-		go fillLinks(note, notesById, &wg)
-	}
-	wg.Wait()
+		linksIds := getWikilinks(note.GetContent())
 
-	return notes
-}
+		for _, linkId := range linksIds {
+			linkedNote := notesById[linkId]
+			if linkedNote == nil {
+				log.Printf("[ERROR] note '%s' has broken link to id '%s'\n", GetNoteLink(note), linkId)
+				continue
+			}
 
-func fillLinks(note *Note, notesById map[string]*Note, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	linksIds := getWikilinks(note.GetContent())
-
-	for _, linkId := range linksIds {
-		linkedNote := notesById[linkId]
-		if linkedNote == nil {
-			log.Printf("[ERROR] note '%s' has broken link to id '%s'\n", GetNoteLink(note), linkId)
-			continue
+			note.Links = append(note.Links, linkedNote)
+			linkedNote.Backlinks = append(linkedNote.Backlinks, note)
 		}
 
-		note.Links = append(note.Links, linkedNote)
-		linkedNote.Backlinks = append(linkedNote.Backlinks, note)
+		sort.Slice(note.Links, func(i, j int) bool {
+			return note.Links[i].Id < note.Links[j].Id
+		})
+
+		sort.Slice(note.Backlinks, func(i, j int) bool {
+			return note.Backlinks[i].Id < note.Backlinks[j].Id
+		})
 	}
 
-	sort.Slice(note.Links, func(i, j int) bool {
-		return note.Links[i].Id < note.Links[j].Id
-	})
-
-	sort.Slice(note.Backlinks, func(i, j int) bool {
-		return note.Backlinks[i].Id < note.Backlinks[j].Id
-	})
+	return notes
 }
 
 func SaveBacklinksInFiles(notes []*Note) {
