@@ -11,7 +11,7 @@ Both `[[202012121859]]` and `[[202012121859 note taking apps]]` wikilinks format
 `go run ./cmd/CMD/`
 
 ---
-### Regenerate-backlinks
+### 1. Regenerate-backlinks
 Recalculates backlinks for notes, updates files appending the result to the end of a file.   
 For example:
 ```
@@ -34,7 +34,7 @@ For example:
 `go install github.com/romanthekat/r-notes/cmd/regenerate-backlinks@latest`
 
 ---
-### Sub-graph
+### 2. Sub-graph
 Renders subgraph by provided note file.
 
 #### Usage
@@ -60,7 +60,7 @@ Usage of ./sub-graph:
 `go install github.com/romanthekat/r-notes/cmd/sub-graph@latest`
 
 ---
-### Full-graph
+### 3. Full-graph
 Renders graph of all notes within provided folder.  
 Please note, 700+ notes' graph will be somewhat big.
 
@@ -71,7 +71,7 @@ Please note, 700+ notes' graph will be somewhat big.
 `go install github.com/romanthekat/r-notes/cmd/full-graph@latest`
 
 ---
-### Unlinked
+### 4. Unlinked
 Prints list of notes without (back)links.  
 
 #### Usage
@@ -81,7 +81,7 @@ Prints list of notes without (back)links.
 `go install github.com/romanthekat/r-notes/cmd/unlinked@latest`
 
 ---
-### Tags cloud
+### 5. Tags cloud
 Prints list of tags ordered by popularity.
 
 #### Usage
@@ -91,7 +91,7 @@ Prints list of tags ordered by popularity.
 `go install github.com/romanthekat/r-notes/cmd/tags-cloud@latest`
 
 ---
-### Outliner
+### 6. Outliner
 Generates an outline note for a note.  
 For example with 3 levels depth (note -> links -> links of links):
 ```
