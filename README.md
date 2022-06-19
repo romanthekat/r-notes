@@ -1,7 +1,8 @@
 # r-notes
 
 This is a collection of tools I use for my notes in markdown, zettelkasten alike, format.  
-A tool relies on `[[wiki-link]]` format to find related notes.
+A tool relies on `[[wiki-link]]` format to find related notes, and time-based id in format `202012051855`.  
+Both `[[202012121859]]` and `[[202012121859 note taking apps]]` wikilinks format supported, though the latter is used for auto-generated files as being more exact and widely supported by different apps. 
 
 ## CLI tools
 ### Build a tool manually
@@ -16,14 +17,14 @@ For example:
 ```
 ...note as is...
 ## Backlinks
-- programming languages [[202012051859]]
-- always be coding [[202012141632]]
-- keeping context [[202106071713]]
-- index for 'criteria to select language' [[202111241342]]
-- Jevons paradox [[202201161342]]
-- Hyrum Law [[202201161344]]
-- Chesterton Fence [[202201242307]]
-- The Joel Test [[202201251438]]
+- [[202012051859 programming languages]]
+- [[202012141632 always be coding]]
+- [[202106071713 keeping context]]
+- [[202111241342 index for 'criteria to select language']]
+- [[202201161342 Jevons paradox]]
+- [[202201161344 Hyrum Law]]
+- [[202201242307 Chesterton Fence]]
+- [[202201251438 The Joel Test]]
 ```
 
 #### Usage
@@ -96,49 +97,43 @@ For example with 3 levels depth (note -> links -> links of links):
 ```
 ---
 title: index for 'automatic outliner experiment'
-date: 2020-12-17 12:24
-tags: #index 
+date: 2022-06-19 14:24
+tags: #index
 ---
-# 202012171224 index for 'Automatic outliner experiment'
-- Automatic outliner experiment [[202012051850]]  
-    - Zettelkasten [[202012051855]]  
-        - The Archive [[202012061631]]  
-        - Org-roam [[202012061643]]  
-        - Note taking [[202012061807]]  
-        - Knowledge vs information [[202012111603]]  
-    - Programming languages [[202012051859]]  
-        - Golang [[202012051900]]  
-        - Java [[202012051903]]  
-        - Python [[202012051904]]  
-        - Kotlin [[202012051905]]  
-        - Rust [[202012051906]]  
-        - Elixir [[202012051907]]  
-        - Nim [[202012051908]]  
-        - Ruby [[202012051909]]  
-        - Criteria to select language [[202012051910]]  
-        - Web developer [[202012051919]]  
-        - Crystal [[202012051955]]  
-        - sql [[202012122037]]  
-        - Alternative to java and spring [[202012122049]]  
-        - julia [[202012122057]]  
-        - Stackoverflow vacancies by language [[202012122102]]  
-        - redlang [[202012122104]]  
-        - haxe [[202012122106]]  
-        - Pony language [[202012122108]]  
-    - Golang [[202012051900]]  
-        - Compiled languages [[202012051914]]  
-        - Static-typed languages [[202012051915]]  
-        - Concurrency and parallelism [[202012051916]]  
-        - Native binary [[202012051917]]  
-        - Web developer [[202012051919]]  
-        - Fast compilation [[202012051927]]  
-        - Golang manual [[202012061755]]  
-        - Miss in golang [[202012061759]]  
-        - Frameworks ratings for Golang [[202012122116]]  
-    - Org-mode [[202012052002]]  
-        - Emacs [[202012052000]]  
-    - Auto outliner results [[202012061624]]  
-        - The Archive [[202012061631]]  
+# 202206191424 index for 'automatic outliner experiment'
+- [[202012051850 automatic outliner experiment]]  
+    - [[202012051855 zettelkasten]]  
+        - [[202012051959 vim]]  
+        - [[202012061631 the archive]]  
+        - [[202012061643 org-roam]]  
+        - [[202012061807 Σ note taking]]  
+        - [[202012092253 note types]]  
+        - [[202012111603 knowledge vs information]]  
+        - [[202012121859 note taking apps]]  
+        - [[202012122000 wiki]]  
+        - [[202105252045 my zk app aka r-notes]]  
+        - [[202205092304 zettelkasten.de]]  
+    - [[202012051859 programming languages]]  
+        - [[202012051910 Σ criteria to select language]]  
+        - [[202012122102 stackoverflow vacancies by language]]  
+        - [[202104232303 create my own programming language]]  
+    - [[202012051900 golang]]  
+        - [[202012051859 programming languages]]  
+        - [[202012051914 compiled languages]]  
+        - [[202012051915 static-typed languages]]  
+        - [[202012051916 concurrency and parallelism]]  
+        - [[202012051917 native binary]]  
+        - [[202012051919 web developer]]  
+        - [[202012051927 fast compilation]]  
+        - [[202012061755 golang manual]]  
+        - [[202012061759 miss in golang]]  
+        - [[202012122011 Σ programming]]  
+        - [[202012122116 frameworks ratings for golang]]  
+    - [[202012052002 org-mode]]  
+        - [[202012052000 emacs]]  
+    - [[202012061624 auto outliner results]]  
+        - [[202012061631 the archive]]  
+    - [[202012191202 235 read articles and automatic outliner]]  
 ```
 
 #### Install
