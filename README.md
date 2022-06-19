@@ -27,17 +27,17 @@ For example:
 - [[202201251438 The Joel Test]]
 ```
 
-#### Usage
+Usage:  
 `regenerate-backlinks "path/to/notes/folder"`
 
-#### Install
+Install:  
 `go install github.com/romanthekat/r-notes/cmd/regenerate-backlinks@latest`
 
 
 ### 2. Sub-graph
 Renders subgraph by provided note file.
 
-#### Usage
+Usage:  
 `sub-graph -notePath="path/to/note.md" -outputPath="path/to/graph.png"`  
 `sub-graph -h`
 ```
@@ -52,11 +52,11 @@ Usage of ./sub-graph:
         a path to rendered graph file (default "./")
 ```
 
-#### Example
+Example:  
 `sub-graph -notePath="path/to/notes/202111271135 guitar.md" -outputPath="/tmp/sub-graph-example.png" -depth=1`
 ![example output](./docs/sub-graph-example.png)
 
-#### Install
+Install:  
 `go install github.com/romanthekat/r-notes/cmd/sub-graph@latest`
 
 
@@ -64,30 +64,30 @@ Usage of ./sub-graph:
 Renders graph of all notes within provided folder.  
 Please note, 700+ notes' graph will be somewhat big.
 
-#### Usage
+Usage:  
 `full-graph "path/to/notes/folder"`
 
-#### Install
+Install:  
 `go install github.com/romanthekat/r-notes/cmd/full-graph@latest`
 
 
 ### 4. Unlinked
 Prints list of notes without (back)links.  
 
-#### Usage
+Usage:  
 `unlinked "path/to/notes/folder"`
 
-#### Install
+Install:  
 `go install github.com/romanthekat/r-notes/cmd/unlinked@latest`
 
 
 ### 5. Tags cloud
 Prints list of tags ordered by popularity.
 
-#### Usage
+Usage:  
 `tags-cloud "path/to/notes/folder"`
 
-#### Install
+Install:  
 `go install github.com/romanthekat/r-notes/cmd/tags-cloud@latest`
 
 
@@ -136,9 +136,9 @@ tags: #index
     - [[202012191202 235 read articles and automatic outliner]]  
 ```
 
-#### Install
-`go install github.com/romanthekat/r-notes/cmd/outliner@latest`
-
-#### Usage
+Usage:  
 `outliner "path/to/note.md"`  
 will generate `/path/to/DATE_ZK_ID index for 'note title'.md`
+
+Install:  
+`go install github.com/romanthekat/r-notes/cmd/outliner@latest`
