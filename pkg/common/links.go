@@ -67,8 +67,24 @@ func SaveBacklinksInFiles(notes []*Note) {
 			continue
 		}
 
-		WriteToFile(note.Path, content)
+		if !isSameContent(content, note.GetContent()) {
+			WriteToFile(note.Path, content)
+		}
 	}
+}
+
+func isSameContent(content1, content2 []string) bool {
+	if len(content1) != len(content2) {
+		return false
+	}
+
+	for i, line := range content1 {
+		if line != content2[i] {
+			return false
+		}
+	}
+
+	return true
 }
 
 func generateContentWithBacklinks(note *Note) ([]string, error) {
