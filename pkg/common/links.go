@@ -59,6 +59,8 @@ func FillLinks(notes []*Note) []*Note {
 	return notes
 }
 
+//SaveBacklinksInFiles
+//TODO can be done concurrently, if all necessary info is already in memory
 func SaveBacklinksInFiles(notes []*Note) {
 	for _, note := range notes {
 		content, err := generateContentWithBacklinks(note)
