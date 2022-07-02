@@ -4,6 +4,8 @@ This is a collection of tools I use for my notes in markdown, zettelkasten alike
 A tool relies on `[[wiki-link]]` format to find related notes, and time-based id in format `202012051855`.  
 Both `[[202012121859]]` and `[[202012121859 note taking apps]]` wikilinks format supported, though the latter is used for auto-generated files as being more exact and widely supported by different apps. 
 
+Always do backups :)
+
 ## CLI tools
 ### Build a tool manually
 `go build ./cmd/CMD/`  
@@ -26,6 +28,7 @@ For example:
 - [[202201242307 Chesterton Fence]]
 - [[202201251438 The Joel Test]]
 ```
+Please note, everything after `## Backlinks` is considered a backlinks block and **will be replaced**.
 
 Usage:  
 `regenerate-backlinks "path/to/notes/folder"`
