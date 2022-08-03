@@ -55,7 +55,7 @@ func main() {
 	resultId, resultPath := getResultPath(path, indexTitle)
 	fmt.Printf("writing to %s\n", resultPath)
 
-	resultContent := []string{fmt.Sprintf("# %s %s", resultId, indexTitle)}
+	resultContent := []string{fmt.Sprintf("# %s %s", resultId, indexTitle), tag}
 	resultContent = append(resultContent, outline...)
 
 	common.WriteToFile(resultPath, resultContent)
