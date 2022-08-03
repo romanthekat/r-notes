@@ -50,7 +50,7 @@ func main() {
 		fmt.Println(line)
 	}
 
-	indexTitle := fmt.Sprintf("index for '%s'", targetNote.Name)
+	indexTitle := fmt.Sprintf("index - %s", targetNote.Name)
 
 	resultId, resultPath := getResultPath(path, indexTitle)
 	fmt.Printf("writing to %s\n", resultPath)
