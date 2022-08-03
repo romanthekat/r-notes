@@ -66,3 +66,55 @@ func MoveHeaderFromTopToBottom(path Path, content []string) ([]string, bool) {
 	result := append(body, " ")
 	return append(result, header.Content...), true
 }
+
+func RemoveHeader(path Path, content []string) ([]string, bool) {
+	header := ParseForYamlHeader(content)
+	if !header.Exists() {
+		log.Printf("file %s doesn't have yaml header, skipping\n", path)
+		return content, false
+	}
+
+	if header.From > 0 {
+		log.Printf("file %s has yaml header not on top, skipping\n", path)
+		return content, false
+	}
+
+	body := content[header.To+1:]
+
+	noteHeader := body[0]
+	if !IsFirstLevelHeader(noteHeader) {
+		log.Printf("file %s first line after yaml header is not markdown header, skipping\n", path)
+		return content, false
+	}
+
+	result := []string{noteHeader}
+
+	hasTags, tags := getTagsFromYaml(header)
+	if hasTags {
+		result = append(result, tags)
+	}
+
+	return append(result, body[1:]...), true
+}
+
+func getTagsFromYaml(header *YamlHeader) (bool, string) {
+	for _, line := range header.Content {
+		line = strings.TrimSpace(line)
+
+		tagsPrefix := "tags:"
+		prefixLength := len(tagsPrefix)
+
+		hasTagsPrefix := strings.HasPrefix(line, tagsPrefix)
+		if !hasTagsPrefix {
+			continue
+		}
+
+		if len(line) == prefixLength {
+			continue
+		}
+
+		return true, strings.TrimSpace(line[prefixLength:])
+	}
+
+	return false, ""
+}

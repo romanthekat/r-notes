@@ -13,7 +13,7 @@ func GetNoteNameByNoteContent(content []string) (name string, err error) {
 		titleIdx := strings.Index(line, titleYamlHeader)
 
 		hasYamlHeaderForTitle := titleIdx != -1
-		hasFirstLevelHeader := strings.HasPrefix(line, "# ")
+		hasFirstLevelHeader := IsFirstLevelHeader(line)
 
 		//TODO it's better to rely on state machine and real parsing of yaml header
 		if hasYamlHeaderForTitle {
@@ -24,6 +24,10 @@ func GetNoteNameByNoteContent(content []string) (name string, err error) {
 	}
 
 	return "", fmt.Errorf("not possible to detect and extract note Name from file using yaml title or # header")
+}
+
+func IsFirstLevelHeader(line string) bool {
+	return strings.HasPrefix(line, "# ")
 }
 
 func IsZkId(id string) bool {

@@ -142,7 +142,7 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 			args: struct {
 				path    Path
 				content []string
-			}{path: "/some/Path/file.md", content: []string{
+			}{path: "/some/path/file.md", content: []string{
 				"---",
 				"title: ",
 				"date: ",
@@ -168,7 +168,7 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 			args: struct {
 				path    Path
 				content []string
-			}{path: "/some/Path/file.md", content: []string{
+			}{path: "/some/path/file.md", content: []string{
 				"# header",
 				"some value",
 				"---",
@@ -197,6 +197,97 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 			}
 			if got1 != tt.want1 {
 				t.Errorf("MoveHeaderFromTopToBottom() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func TestRemoveHeader(t *testing.T) {
+	type args struct {
+		path    Path
+		content []string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  []string
+		want1 bool
+	}{
+		{
+			name: "header removed from top",
+			args: struct {
+				path    Path
+				content []string
+			}{path: "/some/path/file.md", content: []string{
+				"---",
+				"title: ",
+				"date: ",
+				"tags: #meow, #verymeow",
+				"---",
+				"# header",
+				"some value",
+			}},
+			want: []string{
+				"# header",
+				"#meow, #verymeow",
+				"some value",
+			},
+			want1: true,
+		},
+		{
+			name: "header tags empty",
+			args: struct {
+				path    Path
+				content []string
+			}{path: "/some/path/file.md", content: []string{
+				"---",
+				"title: ",
+				"date: ",
+				"tags: ",
+				"---",
+				"# header",
+				"some value",
+			}},
+			want: []string{
+				"# header",
+				"some value",
+			},
+			want1: true,
+		},
+		{
+			name: "header not on top - not moved",
+			args: struct {
+				path    Path
+				content []string
+			}{path: "/some/path/file.md", content: []string{
+				"# header",
+				"some value",
+				"---",
+				"title: ",
+				"date: ",
+				"tags: ",
+				"---",
+			}},
+			want: []string{
+				"# header",
+				"some value",
+				"---",
+				"title: ",
+				"date: ",
+				"tags: ",
+				"---",
+			},
+			want1: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := RemoveHeader(tt.args.path, tt.args.content)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RemoveHeader() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("RemoveHeader() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
