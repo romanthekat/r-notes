@@ -55,8 +55,7 @@ func main() {
 	resultId, resultPath := getResultPath(path, indexTitle)
 	fmt.Printf("writing to %s\n", resultPath)
 
-	resultContent := common.GetYamlHeader(resultId, indexTitle, tag)
-	resultContent = append(resultContent, fmt.Sprintf("# %s %s", resultId, indexTitle))
+	resultContent := []string{fmt.Sprintf("# %s %s", resultId, indexTitle)}
 	resultContent = append(resultContent, outline...)
 
 	common.WriteToFile(resultPath, resultContent)

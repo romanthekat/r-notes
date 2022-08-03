@@ -98,12 +98,8 @@ Install:
 Generates an outline note for a note.  
 For example with 3 levels depth (note -> links -> links of links):
 ```
----
-title: index for 'automatic outliner experiment'
-date: 2022-06-19 14:24
-tags: #index
----
-# 202206191424 index for 'automatic outliner experiment'
+# 202206191424 index - automatic outliner experiment
+#index
 - [[202012051850 automatic outliner experiment]]  
     - [[202012051855 zettelkasten]]  
         - [[202012051959 vim]]  
