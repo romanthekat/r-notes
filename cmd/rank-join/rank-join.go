@@ -21,8 +21,8 @@ func main() {
 	//	fmt.Println(note.String())
 	//}
 
-	//result := common.JoinContent(notes)
-	//common.WriteToFile(outputPath, result)
+	result := common.JoinContent(notes)
+	common.WriteToFile(outputPath, result)
 
 	log.Println("file saved to", outputPath)
 }
