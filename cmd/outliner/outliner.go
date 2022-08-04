@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"path/filepath"
 	"time"
@@ -15,14 +16,14 @@ const (
 )
 
 func main() {
-	path, folder, err := core.GetNoteFileArgument(core.MdExtension)
+	path, folder, err := sys.GetNoteFileArgument(sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("generating outline for path", path)
-	_, id, _ := core.ParseNoteFilename(core.GetFilename(path))
+	_, id, _ := core.ParseNoteFilename(sys.GetFilename(path))
 
-	notesPaths, err := core.GetNotesPaths(folder, core.MdExtension)
+	notesPaths, err := sys.GetNotesPaths(folder, sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,13 +59,13 @@ func main() {
 	resultContent := []string{fmt.Sprintf("# %s %s", resultId, indexTitle), tag}
 	resultContent = append(resultContent, outline...)
 
-	core.WriteToFile(resultPath, resultContent)
+	sys.WriteToFile(resultPath, resultContent)
 }
 
-func getResultPath(path core.Path, title string) (id string, resultPath core.Path) {
+func getResultPath(path sys.Path, title string) (id string, resultPath sys.Path) {
 	basePath := filepath.Dir(string(path))
 	zkId := time.Now().Format("200601021504")
-	return zkId, core.Path(
+	return zkId, sys.Path(
 		fmt.Sprintf("%s/%s %s.md", basePath, zkId, title))
 }
 

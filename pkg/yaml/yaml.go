@@ -1,7 +1,9 @@
-package core
+package yaml
 
 import (
 	"fmt"
+	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"strings"
 )
@@ -49,7 +51,7 @@ func ParseForYamlHeader(content []string) *YamlHeader {
 	return NewYamlHeader(nil, -1, -1)
 }
 
-func MoveHeaderFromTopToBottom(path Path, content []string) ([]string, bool) {
+func MoveHeaderFromTopToBottom(path sys.Path, content []string) ([]string, bool) {
 	header := ParseForYamlHeader(content)
 	if !header.Exists() {
 		log.Printf("file %s doesn't have yaml header, skipping\n", path)
@@ -67,7 +69,7 @@ func MoveHeaderFromTopToBottom(path Path, content []string) ([]string, bool) {
 	return append(result, header.Content...), true
 }
 
-func RemoveHeader(path Path, content []string) ([]string, bool) {
+func RemoveHeader(path sys.Path, content []string) ([]string, bool) {
 	header := ParseForYamlHeader(content)
 	if !header.Exists() {
 		log.Printf("file %s doesn't have yaml header, skipping\n", path)
@@ -82,7 +84,7 @@ func RemoveHeader(path Path, content []string) ([]string, bool) {
 	body := content[header.To+1:]
 
 	noteHeader := body[0]
-	if !IsFirstLevelHeader(noteHeader) {
+	if !core.IsFirstLevelHeader(noteHeader) {
 		log.Printf("file %s first line after yaml header is not markdown header, skipping\n", path)
 		return content, false
 	}

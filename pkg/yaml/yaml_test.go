@@ -1,6 +1,7 @@
-package core
+package yaml
 
 import (
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"reflect"
 	"testing"
 )
@@ -128,7 +129,7 @@ func TestYamlHeader_Exists(t *testing.T) {
 
 func TestMoveHeaderFromTopToBottom(t *testing.T) {
 	type args struct {
-		path    Path
+		path    sys.Path
 		content []string
 	}
 	tests := []struct {
@@ -140,7 +141,7 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 		{
 			name: "header moved from top to bottom",
 			args: struct {
-				path    Path
+				path    sys.Path
 				content []string
 			}{path: "/some/path/file.md", content: []string{
 				"---",
@@ -166,7 +167,7 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 		{
 			name: "header not on top - not moved",
 			args: struct {
-				path    Path
+				path    sys.Path
 				content []string
 			}{path: "/some/path/file.md", content: []string{
 				"# header",
@@ -204,7 +205,7 @@ func TestMoveHeaderFromTopToBottom(t *testing.T) {
 
 func TestRemoveHeader(t *testing.T) {
 	type args struct {
-		path    Path
+		path    sys.Path
 		content []string
 	}
 	tests := []struct {
@@ -216,7 +217,7 @@ func TestRemoveHeader(t *testing.T) {
 		{
 			name: "header removed from top",
 			args: struct {
-				path    Path
+				path    sys.Path
 				content []string
 			}{path: "/some/path/file.md", content: []string{
 				"---",
@@ -237,7 +238,7 @@ func TestRemoveHeader(t *testing.T) {
 		{
 			name: "header tags empty",
 			args: struct {
-				path    Path
+				path    sys.Path
 				content []string
 			}{path: "/some/path/file.md", content: []string{
 				"---",
@@ -257,7 +258,7 @@ func TestRemoveHeader(t *testing.T) {
 		{
 			name: "header not on top - not moved",
 			args: struct {
-				path    Path
+				path    sys.Path
 				content []string
 			}{path: "/some/path/file.md", content: []string{
 				"# header",

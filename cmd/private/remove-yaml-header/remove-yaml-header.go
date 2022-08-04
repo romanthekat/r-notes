@@ -1,31 +1,32 @@
 package main
 
 import (
-	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/sys"
+	"github.com/romanthekat/r-notes/pkg/yaml"
 	"log"
 )
 
 func main() {
-	folder, err := core.GetNotesFolderArg()
+	folder, err := sys.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	paths, err := core.GetNotesPaths(folder, core.MdExtension)
+	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, path := range paths {
-		content, err := core.ReadFile(path)
+		content, err := sys.ReadFile(path)
 		if err != nil {
 			log.Printf("error while reading %s: %s\n", path, err)
 			continue
 		}
 
-		updatedContent, canBeMoved := core.RemoveHeader(path, content)
+		updatedContent, canBeMoved := yaml.RemoveHeader(path, content)
 		if canBeMoved {
-			core.WriteToFile(path, updatedContent)
+			sys.WriteToFile(path, updatedContent)
 			log.Printf("yaml header removed from file %s\n", path)
 		}
 	}

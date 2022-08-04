@@ -3,17 +3,18 @@ package main
 import (
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"sort"
 )
 
 func main() {
-	folder, err := core.GetNotesFolderArg()
+	folder, err := sys.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	paths, err := core.GetNotesPaths(folder, core.MdExtension)
+	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}

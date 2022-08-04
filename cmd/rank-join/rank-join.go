@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 )
 
@@ -22,13 +23,13 @@ func main() {
 	//}
 
 	result := core.JoinContent(notes)
-	core.WriteToFile(outputPath, result)
+	sys.WriteToFile(outputPath, result)
 
 	log.Println("file saved to", outputPath)
 }
 
-func getNotes(folder core.Path) []*core.Note {
-	paths, err := core.GetNotesPaths(folder, core.MdExtension)
+func getNotes(folder sys.Path) []*core.Note {
+	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,7 +41,7 @@ func getNotes(folder core.Path) []*core.Note {
 	return notes
 }
 
-func parseArguments() (core.Path, core.Path, error) {
+func parseArguments() (sys.Path, sys.Path, error) {
 	notesPath := flag.String("notesPath", "", "a path to notes folder")
 	outputPath := flag.String("outputPath", "./", "a path to result join file")
 	flag.Parse()
@@ -49,5 +50,5 @@ func parseArguments() (core.Path, core.Path, error) {
 		return "", "", fmt.Errorf("provide both 'notesPath' and 'outputPath'")
 	}
 
-	return core.Path(*notesPath), core.Path(*outputPath), nil
+	return sys.Path(*notesPath), sys.Path(*outputPath), nil
 }

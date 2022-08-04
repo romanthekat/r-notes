@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"regexp"
 	"sort"
@@ -70,7 +71,7 @@ func SaveBacklinksInFiles(notes []*Note) {
 		}
 
 		if !IsSameContent(content, note.GetContent()) {
-			WriteToFile(note.Path, content)
+			sys.WriteToFile(note.Path, content)
 		}
 	}
 }

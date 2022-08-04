@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,25 +11,25 @@ import (
 )
 
 func main() {
-	folder, err := core.GetNotesFolderArg()
+	folder, err := sys.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("reading notes at " + folder)
 
-	paths, err := core.GetNotesPaths(folder, core.MdExtension)
+	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("found notes:", len(paths))
 
 	for _, path := range paths {
-		if !core.IsZkId(core.GetFilename(path)) {
+		if !core.IsZkId(sys.GetFilename(path)) {
 			fmt.Printf("filename of %s is not ZK ID, skipping\n", path)
 			continue
 		}
 
-		content, err := core.ReadFile(path)
+		content, err := sys.ReadFile(path)
 		if err != nil {
 			fmt.Printf("error during reading content of %s: %s\n", path, err)
 			continue
@@ -50,11 +51,11 @@ func main() {
 	}
 }
 
-func getPathWithIdAndTitle(path core.Path, name string) string {
+func getPathWithIdAndTitle(path sys.Path, name string) string {
 	replacer := strings.NewReplacer("/", " ", "\\", " ")
 	resultName := replacer.Replace(name)
 	resultName = strings.Trim(resultName, " .")
 
 	return fmt.Sprintf("%s/%s %s%s",
-		filepath.Dir(string(path)), core.GetFilename(path), resultName, core.MdExtension)
+		filepath.Dir(string(path)), sys.GetFilename(path), resultName, sys.MdExtension)
 }

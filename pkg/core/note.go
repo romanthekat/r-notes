@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"sync"
 )
@@ -17,7 +18,7 @@ type Note struct {
 
 	Tags map[string]any
 
-	Path        Path
+	Path        sys.Path
 	loadContent *sync.Once
 }
 
@@ -25,11 +26,11 @@ func (n *Note) String() string {
 	return GetNoteLink(n)
 }
 
-func NewNote(id, name string, path Path, content []string) *Note {
+func NewNote(id, name string, path sys.Path, content []string) *Note {
 	return &Note{Id: id, Name: name, Path: path, Content: content, loadContent: &sync.Once{}}
 }
 
-func NewNoteWithLinks(id, name string, path Path, content []string, links []*Note, backlinks []*Note) *Note {
+func NewNoteWithLinks(id, name string, path sys.Path, content []string, links []*Note, backlinks []*Note) *Note {
 	note := NewNote(id, name, path, content)
 
 	note.Links = links
@@ -38,7 +39,7 @@ func NewNoteWithLinks(id, name string, path Path, content []string, links []*Not
 	return note
 }
 
-func NewNoteWithTags(id, name string, path Path, content []string, tags map[string]any) *Note {
+func NewNoteWithTags(id, name string, path sys.Path, content []string, tags map[string]any) *Note {
 	note := NewNote(id, name, path, content)
 
 	note.Tags = tags
@@ -56,7 +57,7 @@ func (n *Note) GetContent() []string {
 			return
 		}
 
-		content, err := ReadFile(n.Path)
+		content, err := sys.ReadFile(n.Path)
 		if err != nil {
 			panic(fmt.Sprintf("can't loadContent file %s content: %s", n, err))
 		}
@@ -67,7 +68,7 @@ func (n *Note) GetContent() []string {
 	return n.Content
 }
 
-func NewNotesByPaths(paths []Path) []*Note {
+func NewNotesByPaths(paths []sys.Path) []*Note {
 	var notes []*Note
 
 	for _, path := range paths {
@@ -83,8 +84,8 @@ func NewNotesByPaths(paths []Path) []*Note {
 	return notes
 }
 
-func NewNoteByPath(path Path) *Note {
-	isZettel, id, name := ParseNoteFilename(GetFilename(path))
+func NewNoteByPath(path sys.Path) *Note {
+	isZettel, id, name := ParseNoteFilename(sys.GetFilename(path))
 	note := NewNote(id, name, path, []string{})
 
 	if isZettel && len(name) != 0 {

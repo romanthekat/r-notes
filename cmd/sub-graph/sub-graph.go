@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/render"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"path/filepath"
 	"strings"
@@ -24,7 +26,7 @@ func main() {
 	note, _ := getNotes(notePath, folderPath)
 
 	log.Println("preparing graph")
-	g, graph, finishFunc := core.InitGraphviz()
+	g, graph, finishFunc := render.InitGraphviz()
 	defer finishFunc()
 
 	noteToNodeMap := make(map[string]*cgraph.Node)
@@ -34,7 +36,7 @@ func main() {
 	log.Println("notes in graph:", len(notes))
 
 	for _, note := range notes {
-		noteToNodeMap[note.Id] = core.GetNode(graph, note.Name)
+		noteToNodeMap[note.Id] = render.GetNode(graph, note.Name)
 	}
 
 	node := noteToNodeMap[note.Id]
@@ -44,13 +46,13 @@ func main() {
 		for _, link := range note.Links {
 			linkNode := noteToNodeMap[link.Id]
 			if linkNode != nil {
-				core.GetEdge(graph, noteToNodeMap[note.Id], linkNode, "link")
+				render.GetEdge(graph, noteToNodeMap[note.Id], linkNode, "link")
 			}
 		}
 	}
 
 	log.Println("rendering to file")
-	core.SaveGraphToFile(g, graph, string(outputPath))
+	render.SaveGraphToFile(g, graph, string(outputPath))
 	log.Println("graph saved to:", outputPath)
 }
 
@@ -104,13 +106,13 @@ func getNotesForSubgraphRecursive(note *core.Note, levelsLeft int, ignoreTags []
 	return result
 }
 
-func getNotes(notePath, folderPath core.Path) (*core.Note, []*core.Note) {
-	isZettel, id, _ := core.ParseNoteFilename(core.GetFilename(notePath))
+func getNotes(notePath, folderPath sys.Path) (*core.Note, []*core.Note) {
+	isZettel, id, _ := core.ParseNoteFilename(sys.GetFilename(notePath))
 	if !isZettel {
 		log.Fatal(fmt.Errorf("provided note filename is not a correct zk note"))
 	}
 
-	paths, err := core.GetNotesPaths(folderPath, core.MdExtension)
+	paths, err := sys.GetNotesPaths(folderPath, sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -134,22 +136,22 @@ func getNotes(notePath, folderPath core.Path) (*core.Note, []*core.Note) {
 	return targetNote, notes
 }
 
-func parseArguments() (core.Path, core.Path, int, []string, core.Path, error) {
+func parseArguments() (sys.Path, sys.Path, int, []string, sys.Path, error) {
 	notePath := flag.String("notePath", "", "a path to note file")
 	outputPath := flag.String("outputPath", "./", "a path to rendered graph file")
 	graphDepth := flag.Int("depth", 2, "graph depth to render")
 	ignoreTags := flag.String("ignoreTags", "", "comma seperated list of tags which is used to ignore/filter notes")
 	flag.Parse()
 
-	if filepath.Ext(*notePath) != core.MdExtension {
-		return "", "", -1, nil, "", fmt.Errorf("specify %s path for generating graph", core.MdExtension)
+	if filepath.Ext(*notePath) != sys.MdExtension {
+		return "", "", -1, nil, "", fmt.Errorf("specify %s path for generating graph", sys.MdExtension)
 	}
 
 	if *notePath == "" || *outputPath == "" {
 		return "", "", -1, nil, "", fmt.Errorf("provide both 'notePath' and 'outputPath'")
 	}
 
-	return core.Path(*notePath), core.Path(filepath.Dir(*notePath)),
-		*graphDepth, strings.Split(*ignoreTags, ","), core.Path(*outputPath),
+	return sys.Path(*notePath), sys.Path(filepath.Dir(*notePath)),
+		*graphDepth, strings.Split(*ignoreTags, ","), sys.Path(*outputPath),
 		nil
 }

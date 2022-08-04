@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/render"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 )
 
@@ -19,28 +21,28 @@ func main() {
 	notes := getNotes(folder)
 
 	log.Println("preparing graph")
-	g, graph, finishFunc := core.InitGraphviz()
+	g, graph, finishFunc := render.InitGraphviz()
 	defer finishFunc()
 
 	noteToNodeMap := make(map[string]*cgraph.Node)
 	for _, note := range notes {
-		noteToNodeMap[note.Id] = core.GetNode(graph, note.Name)
+		noteToNodeMap[note.Id] = render.GetNode(graph, note.Name)
 	}
 
 	for _, note := range notes {
 		for _, link := range note.Links {
-			edge := core.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
+			edge := render.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
 			edge.SetLabel("link")
 		}
 	}
 
 	log.Println("rendering to file")
-	core.SaveGraphToFile(g, graph, string(outputPath))
+	render.SaveGraphToFile(g, graph, string(outputPath))
 	log.Println("file saved to", outputPath)
 }
 
-func getNotes(folder core.Path) []*core.Note {
-	paths, err := core.GetNotesPaths(folder, core.MdExtension)
+func getNotes(folder sys.Path) []*core.Note {
+	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,7 +54,7 @@ func getNotes(folder core.Path) []*core.Note {
 	return notes
 }
 
-func parseArguments() (core.Path, core.Path, error) {
+func parseArguments() (sys.Path, sys.Path, error) {
 	notesPath := flag.String("notesPath", "", "a path to notes folder")
 	outputPath := flag.String("outputPath", "./", "a path to rendered graph file")
 	flag.Parse()
@@ -61,5 +63,5 @@ func parseArguments() (core.Path, core.Path, error) {
 		return "", "", fmt.Errorf("provide both 'notesPath' and 'outputPath'")
 	}
 
-	return core.Path(*notesPath), core.Path(*outputPath), nil
+	return sys.Path(*notesPath), sys.Path(*outputPath), nil
 }

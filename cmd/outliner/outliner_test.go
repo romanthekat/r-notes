@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/sys"
 	"reflect"
 	"testing"
 )
@@ -42,7 +43,7 @@ func Test_getNotesOutline(t *testing.T) {
 
 func Test_getNoteName(t *testing.T) {
 	type args struct {
-		path core.Path
+		path sys.Path
 	}
 	tests := []struct {
 		name string
@@ -59,7 +60,7 @@ func Test_getNoteName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := core.GetFilename(tt.args.path); got != tt.want {
+			if got := sys.GetFilename(tt.args.path); got != tt.want {
 				t.Errorf("GetFilename() = %v, want %v", got, tt.want)
 			}
 		})
