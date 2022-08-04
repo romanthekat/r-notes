@@ -112,14 +112,10 @@ func getNotes(notePath, folderPath sys.Path) (*core.Note, []*core.Note) {
 		log.Fatal(fmt.Errorf("provided note filename is not a correct zk note"))
 	}
 
-	paths, err := sys.GetNotesPaths(folderPath, sys.MdExtension)
+	notes, err := core.GetNotes(folderPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	notes := core.NewNotesByPaths(paths)
-	core.FillLinks(notes)
-	core.FillTags(notes)
 
 	var targetNote *core.Note
 	for _, note := range notes {

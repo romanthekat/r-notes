@@ -18,7 +18,10 @@ func main() {
 	}
 
 	log.Println("obtaining notes")
-	notes := getNotes(folder)
+	notes, err := core.GetNotes(folder)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	log.Println("preparing graph")
 	g, graph, finishFunc := render.InitGraphviz()
@@ -39,19 +42,6 @@ func main() {
 	log.Println("rendering to file")
 	render.SaveGraphToFile(g, graph, string(outputPath))
 	log.Println("file saved to", outputPath)
-}
-
-func getNotes(folder sys.Path) []*core.Note {
-	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	notes := core.NewNotesByPaths(paths)
-	core.FillLinks(notes)
-	core.FillTags(notes)
-
-	return notes
 }
 
 func parseArguments() (sys.Path, sys.Path, error) {

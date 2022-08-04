@@ -104,3 +104,24 @@ func NewNoteByPath(path sys.Path) *Note {
 	note.Name = name
 	return note
 }
+
+func GetNotes(folder sys.Path) ([]*Note, error) {
+	return GetNotesPartial(folder, true, true)
+}
+
+func GetNotesPartial(folder sys.Path, fillLinks, fillTabs bool) ([]*Note, error) {
+	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
+	if err != nil {
+		return nil, err
+	}
+
+	notes := NewNotesByPaths(paths)
+	if fillLinks {
+		notes = FillLinks(notes)
+	}
+	if fillTabs {
+		notes = FillTags(notes)
+	}
+
+	return notes, nil
+}

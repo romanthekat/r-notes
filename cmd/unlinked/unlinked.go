@@ -13,7 +13,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	notes := getNotes(folder)
+	notes, err := core.GetNotesPartial(folder, true, false)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.Println("notes without (back)links:")
 
 	for _, note := range notes {
@@ -21,16 +25,4 @@ func main() {
 			fmt.Println(core.GetNoteLink(note))
 		}
 	}
-}
-
-func getNotes(folder sys.Path) []*core.Note {
-	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	notes := core.NewNotesByPaths(paths)
-	core.FillLinks(notes)
-
-	return notes
 }

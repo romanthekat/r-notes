@@ -14,8 +14,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	notes := getNotes(folder)
-	core.FillTags(notes)
+	notes, err := core.GetNotes(folder)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	tagsMap := make(map[string]int)
 	for _, note := range notes {
@@ -38,16 +40,4 @@ func main() {
 	for _, tag := range tags {
 		fmt.Printf("%s x%d\n", tag, tagsMap[tag])
 	}
-}
-
-func getNotes(folder sys.Path) []*core.Note {
-	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	notes := core.NewNotesByPaths(paths)
-	core.FillLinks(notes)
-
-	return notes
 }

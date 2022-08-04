@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
@@ -21,7 +22,6 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("generating outline for path", path)
-	_, id, _ := core.ParseNoteFilename(sys.GetFilename(path))
 
 	notesPaths, err := sys.GetNotesPaths(folder, sys.MdExtension)
 	if err != nil {
@@ -33,19 +33,12 @@ func main() {
 	notes := core.NewNotesByPaths(notesPaths)
 	core.FillLinks(notes)
 
-	var targetNote *core.Note
-	for _, note := range notes {
-		if note.Id == id {
-			targetNote = note
-			break
-		}
-	}
-	if targetNote == nil {
-		log.Fatal("provided note path wasn't correctly parsed as a zk note")
+	targetNote, err := getTargetNote(path, notes)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	log.Printf("outline:\n")
-
 	outline := getNotesOutline(targetNote, "", 3, nil)
 	for _, line := range outline {
 		fmt.Println(line)
@@ -60,6 +53,24 @@ func main() {
 	resultContent = append(resultContent, outline...)
 
 	sys.WriteToFile(resultPath, resultContent)
+}
+
+func getTargetNote(path sys.Path, notes []*core.Note) (*core.Note, error) {
+	_, id, _ := core.ParseNoteFilename(sys.GetFilename(path))
+
+	var targetNote *core.Note
+	for _, note := range notes {
+		if note.Id == id {
+			targetNote = note
+			break
+		}
+	}
+
+	if targetNote == nil {
+		return nil, errors.New("provided note path wasn't correctly parsed as a zk note")
+	}
+
+	return targetNote, nil
 }
 
 func getResultPath(path sys.Path, title string) (id string, resultPath sys.Path) {

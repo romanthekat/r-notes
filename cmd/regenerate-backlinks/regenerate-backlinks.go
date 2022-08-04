@@ -12,13 +12,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
+	notes, err := core.GetNotesPartial(folder, true, false)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	notes := core.NewNotesByPaths(paths)
-	core.FillLinks(notes)
 
 	core.SaveBacklinksInFiles(notes)
 }
