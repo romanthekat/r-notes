@@ -12,7 +12,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	notes, err := core.GetNotesPartial(folder, true, false)
+	notes, err := core.GetNotesDetailed(folder, true, false)
 	if err != nil {
 		log.Fatal(err)
 	}

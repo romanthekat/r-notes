@@ -24,15 +24,11 @@ func main() {
 	}
 	log.Println("generating outline for path", path)
 
-	notesPaths, err := sys.GetNotesPaths(folder, sys.MdExtension)
+	notes, err := core.GetNotesDetailed(folder, true, false)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("found .md files:", len(notesPaths))
-	log.Println("parsing links")
-
-	notes := core.NewNotesByPaths(notesPaths)
-	core.FillLinks(notes)
+	log.Println("found notes files:", len(notes))
 
 	targetNote, err := getTargetNote(path, notes)
 	if err != nil {

@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"github.com/romanthekat/r-notes/pkg/md"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
@@ -11,11 +12,6 @@ import (
 )
 
 const BacklinksHeader = "## Backlinks"
-
-//IsMarkdownHeader TODO more reliable parsing would be beneficial
-func IsMarkdownHeader(line string) bool {
-	return strings.HasPrefix(line, "# ") || strings.HasPrefix(line, "## ") || strings.HasPrefix(line, "### ")
-}
 
 func IsBacklinksHeader(line string) bool {
 	return strings.TrimSpace(line) == BacklinksHeader
@@ -118,7 +114,7 @@ func findBacklinkHeader(note *Note) (found bool, index int, err error) {
 			continue
 		}
 
-		if found && IsMarkdownHeader(line) && line != "## ..." {
+		if found && md.IsMarkdownHeader(line) && line != "## ..." {
 			return found, index, fmt.Errorf("there is a markdown header after backlinks header - structure is incorrect")
 		}
 	}

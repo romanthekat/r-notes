@@ -69,6 +69,27 @@ func (n *Note) GetContent() []string {
 	return n.Content
 }
 
+func GetNotes(folder sys.Path) ([]*Note, error) {
+	return GetNotesDetailed(folder, true, true)
+}
+
+func GetNotesDetailed(folder sys.Path, fillLinks, fillTabs bool) ([]*Note, error) {
+	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
+	if err != nil {
+		return nil, err
+	}
+
+	notes := NewNotesByPaths(paths)
+	if fillLinks {
+		notes = FillLinks(notes)
+	}
+	if fillTabs {
+		notes = FillTags(notes)
+	}
+
+	return notes, nil
+}
+
 func NewNotesByPaths(paths []sys.Path) []*Note {
 	var notes []*Note
 
@@ -104,25 +125,4 @@ func NewNoteByPath(path sys.Path) *Note {
 
 	note.Name = name
 	return note
-}
-
-func GetNotes(folder sys.Path) ([]*Note, error) {
-	return GetNotesPartial(folder, true, true)
-}
-
-func GetNotesPartial(folder sys.Path, fillLinks, fillTabs bool) ([]*Note, error) {
-	paths, err := sys.GetNotesPaths(folder, sys.MdExtension)
-	if err != nil {
-		return nil, err
-	}
-
-	notes := NewNotesByPaths(paths)
-	if fillLinks {
-		notes = FillLinks(notes)
-	}
-	if fillTabs {
-		notes = FillTags(notes)
-	}
-
-	return notes, nil
 }
