@@ -128,6 +128,31 @@ func Test_generateContentWithBacklinks(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			name: "note with backlinks",
+			args: args{
+				note: NewNoteWithLinks("202202261746",
+					"Note with backlinks",
+					"",
+					[]string{
+						"# Note with backlinks",
+						"line one",
+						"line two"},
+					nil,
+					[]*Note{
+						NewNote("202202261747", "The backlink", "", nil),
+					},
+				),
+			},
+			want: []string{
+				"# Note with backlinks",
+				"line one",
+				"line two",
+				BacklinksHeader,
+				"- [[202202261747 The backlink]]",
+			},
+			wantErr: false,
+		},
+		{
 			name: "note without backlinks",
 			args: args{
 				note: NewNoteWithLinks("202202261746",
@@ -138,17 +163,13 @@ func Test_generateContentWithBacklinks(t *testing.T) {
 						"line one",
 						"line two"},
 					nil,
-					[]*Note{
-						NewNote("202202261747", "The backlink", "", nil),
-					},
+					nil,
 				),
 			},
 			want: []string{
 				"# Note without backlinks",
 				"line one",
 				"line two",
-				BacklinksHeader,
-				"- [[202202261747 The backlink]]",
 			},
 			wantErr: false,
 		},

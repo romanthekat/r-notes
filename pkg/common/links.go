@@ -95,6 +95,10 @@ func generateContentWithBacklinks(note *Note) ([]string, error) {
 }
 
 func generateBacklinksContent(note *Note) []string {
+	if len(note.Backlinks) == 0 {
+		return nil
+	}
+
 	backlinksContent := []string{BacklinksHeader}
 
 	for _, backlink := range note.Backlinks {
