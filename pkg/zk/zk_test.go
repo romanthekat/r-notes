@@ -1,6 +1,7 @@
-package core
+package zk
 
 import (
+	"github.com/romanthekat/r-notes/pkg/render"
 	"testing"
 )
 
@@ -23,7 +24,7 @@ func Test_formatIdAsDate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FormatIdAsIsoDate(tt.args.zkId); got != tt.want {
+			if got := render.FormatIdAsIsoDate(tt.args.zkId); got != tt.want {
 				t.Errorf("FormatIdAsIsoDate() = %v, want %v", got, tt.want)
 			}
 		})

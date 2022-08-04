@@ -7,6 +7,7 @@ import (
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/render"
 	"github.com/romanthekat/r-notes/pkg/sys"
+	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"path/filepath"
 	"strings"
@@ -107,7 +108,7 @@ func getNotesForSubgraphRecursive(note *core.Note, levelsLeft int, ignoreTags []
 }
 
 func getNotes(notePath, folderPath sys.Path) (*core.Note, []*core.Note) {
-	isZettel, id, _ := core.ParseNoteFilename(sys.GetFilename(notePath))
+	isZettel, id, _ := zk.ParseNoteFilename(sys.GetFilename(notePath))
 	if !isZettel {
 		log.Fatal(fmt.Errorf("provided note filename is not a correct zk note"))
 	}

@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/sys"
+	"github.com/romanthekat/r-notes/pkg/yaml"
+	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"os"
 	"path/filepath"
@@ -39,7 +40,7 @@ func main() {
 			panic(err)
 		}
 
-		header := core.GetYamlHeader(id, name, "")
+		header := yaml.GetYamlHeaderContent(id, name, "")
 
 		sys.WriteToFile(path, append(header, content...))
 
@@ -62,5 +63,5 @@ func parseNoteNameByPath(path sys.Path) (isZettel bool, id, name string) {
 		return false, "", ""
 	}
 
-	return core.ParseNoteFilename(sys.GetFilename(path))
+	return zk.ParseNoteFilename(sys.GetFilename(path))
 }

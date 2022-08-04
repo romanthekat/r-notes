@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/sys"
+	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"os"
 	"path/filepath"
@@ -24,7 +24,7 @@ func main() {
 	log.Println("found notes:", len(paths))
 
 	for _, path := range paths {
-		if !core.IsZkId(sys.GetFilename(path)) {
+		if !zk.IsZkId(sys.GetFilename(path)) {
 			fmt.Printf("filename of %s is not ZK ID, skipping\n", path)
 			continue
 		}
@@ -35,7 +35,7 @@ func main() {
 			continue
 		}
 
-		name, err := core.GetNoteNameByNoteContent(content)
+		name, err := zk.GetNoteNameByNoteContent(content)
 		if err != nil {
 			fmt.Printf("error during getting note name of %s: %s\n", path, err)
 			continue

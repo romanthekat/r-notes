@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/sys"
+	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"regexp"
 	"sort"
@@ -162,7 +163,7 @@ func getWikilinks(content []string) []string {
 func isLinkFullFormat(link string) (bool, string) {
 	if strings.Contains(link, " ") {
 		parts := strings.Split(link, " ")
-		if len(parts) > 0 && IsZkId(parts[0]) {
+		if len(parts) > 0 && zk.IsZkId(parts[0]) {
 			return true, parts[0]
 		}
 	}

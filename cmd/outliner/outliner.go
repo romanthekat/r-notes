@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/sys"
+	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"path/filepath"
 	"time"
@@ -56,7 +57,7 @@ func main() {
 }
 
 func getTargetNote(path sys.Path, notes []*core.Note) (*core.Note, error) {
-	_, id, _ := core.ParseNoteFilename(sys.GetFilename(path))
+	_, id, _ := zk.ParseNoteFilename(sys.GetFilename(path))
 
 	var targetNote *core.Note
 	for _, note := range notes {

@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/sys"
+	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"sync"
 )
@@ -85,7 +86,7 @@ func NewNotesByPaths(paths []sys.Path) []*Note {
 }
 
 func NewNoteByPath(path sys.Path) *Note {
-	isZettel, id, name := ParseNoteFilename(sys.GetFilename(path))
+	isZettel, id, name := zk.ParseNoteFilename(sys.GetFilename(path))
 	note := NewNote(id, name, path, []string{})
 
 	if isZettel && len(name) != 0 {
@@ -96,7 +97,7 @@ func NewNoteByPath(path sys.Path) *Note {
 		return note
 	}
 
-	name, err := GetNoteNameByNoteContent(note.GetContent())
+	name, err := zk.GetNoteNameByNoteContent(note.GetContent())
 	if err != nil {
 		log.Fatalf("[ERROR] error during parsing note in path '%s': %s", path, err)
 	}

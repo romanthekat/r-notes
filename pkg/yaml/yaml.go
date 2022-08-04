@@ -2,13 +2,15 @@ package yaml
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/md"
+	"github.com/romanthekat/r-notes/pkg/render"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
 	"strings"
 )
 
 const Delimiter = "---"
+const TitleParameter = "title:"
 const (
 	yamlNotFound = iota
 	readingYaml
@@ -31,7 +33,17 @@ func (y Header) Exists() bool {
 	return y.From != -1
 }
 
-func ParseForYamlHeader(content []string) *Header {
+func GetYamlHeaderContent(id, name, tags string) []string {
+	return []string{
+		"---",
+		"title: " + strings.ToLower(name),
+		"date: " + render.FormatIdAsIsoDate(id),
+		"tags: " + tags,
+		"---",
+	}
+}
+
+func ExtractYamlHeader(content []string) *Header {
 	from := -1
 	state := yamlNotFound
 
@@ -52,7 +64,7 @@ func ParseForYamlHeader(content []string) *Header {
 }
 
 func MoveHeaderFromTopToBottom(path sys.Path, content []string) ([]string, bool) {
-	header := ParseForYamlHeader(content)
+	header := ExtractYamlHeader(content)
 	if !header.Exists() {
 		log.Printf("file %s doesn't have yaml header, skipping\n", path)
 		return content, false
@@ -70,7 +82,7 @@ func MoveHeaderFromTopToBottom(path sys.Path, content []string) ([]string, bool)
 }
 
 func RemoveHeader(path sys.Path, content []string) ([]string, bool) {
-	header := ParseForYamlHeader(content)
+	header := ExtractYamlHeader(content)
 	if !header.Exists() {
 		log.Printf("file %s doesn't have yaml header, skipping\n", path)
 		return content, false
@@ -84,7 +96,7 @@ func RemoveHeader(path sys.Path, content []string) ([]string, bool) {
 	body := content[header.To+1:]
 
 	noteHeader := body[0]
-	if !core.IsFirstLevelHeader(noteHeader) {
+	if !md.IsFirstLevelHeader(noteHeader) {
 		log.Printf("file %s first line after yaml header is not markdown header, skipping\n", path)
 		return content, false
 	}

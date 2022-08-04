@@ -23,12 +23,6 @@ func InitGraphviz() (g *graphviz.Graphviz, graph *cgraph.Graph, finishFunc func(
 	}
 }
 
-func SaveGraphToFile(g *graphviz.Graphviz, graph *cgraph.Graph, graphPath string) {
-	if err := g.RenderFilename(graph, graphviz.PNG, graphPath); err != nil {
-		log.Fatal(err)
-	}
-}
-
 func GetNode(graph *cgraph.Graph, name string) *cgraph.Node {
 	node, err := graph.CreateNode(name)
 	if err != nil {
@@ -45,4 +39,10 @@ func GetEdge(graph *cgraph.Graph, start, end *cgraph.Node, name string) *cgraph.
 	}
 
 	return edge
+}
+
+func SaveGraphToFile(g *graphviz.Graphviz, graph *cgraph.Graph, graphPath string) {
+	if err := g.RenderFilename(graph, graphviz.PNG, graphPath); err != nil {
+		log.Fatal(err)
+	}
 }

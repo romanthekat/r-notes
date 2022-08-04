@@ -1,33 +1,29 @@
-package core
+package zk
 
 import (
 	"fmt"
+	"github.com/romanthekat/r-notes/pkg/md"
+	"github.com/romanthekat/r-notes/pkg/yaml"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func GetNoteNameByNoteContent(content []string) (name string, err error) {
 	for _, line := range content {
-		titleYamlHeader := "title:"
-		titleIdx := strings.Index(line, titleYamlHeader)
+		titleIdx := strings.Index(line, yaml.TitleParameter)
+		hasYamlTitleParameter := titleIdx != -1
 
-		hasYamlHeaderForTitle := titleIdx != -1
-		hasFirstLevelHeader := IsFirstLevelHeader(line)
+		hasFirstLevelHeader := md.IsFirstLevelHeader(line)
 
 		//TODO it's better to rely on state machine and real parsing of yaml header
-		if hasYamlHeaderForTitle {
-			return line[titleIdx+len(titleYamlHeader)+1:], nil
+		if hasYamlTitleParameter {
+			return line[titleIdx+len(yaml.TitleParameter)+1:], nil
 		} else if hasFirstLevelHeader {
 			return line[2:], nil
 		}
 	}
 
 	return "", fmt.Errorf("not possible to detect and extract note Name from file using yaml title or # header")
-}
-
-func IsFirstLevelHeader(line string) bool {
-	return strings.HasPrefix(line, "# ")
 }
 
 func IsZkId(id string) bool {
@@ -58,23 +54,4 @@ func ParseNoteFilename(filename string) (isZettel bool, id, name string) {
 	name = strings.TrimSpace(name)
 
 	return true, id, name
-}
-
-func GetYamlHeader(id, name, tags string) []string {
-	return []string{
-		"---",
-		"title: " + strings.ToLower(name),
-		"date: " + FormatIdAsIsoDate(id),
-		"tags: " + tags,
-		"---",
-	}
-}
-
-func FormatIdAsIsoDate(zkId string) string {
-	date, err := time.Parse("200601021504", zkId)
-	if err != nil {
-		panic(err)
-	}
-
-	return date.Format("2006-01-02 15:04")
 }
