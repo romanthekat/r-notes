@@ -3,12 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/romanthekat/r-notes/pkg/common"
 	"log"
 )
 
-//TODO seems to be too big on 700+ notes
 func main() {
 	folder, outputPath, err := parseArguments()
 	if err != nil {
@@ -18,24 +16,14 @@ func main() {
 	log.Println("obtaining notes")
 	notes := getNotes(folder)
 
-	log.Println("preparing graph")
-	g, graph, finishFunc := common.InitGraphviz()
-	defer finishFunc()
+	notes = common.SortByRank(notes)
+	//for _, note := range notes {
+	//	fmt.Println(note.String())
+	//}
 
-	noteToNodeMap := make(map[string]*cgraph.Node)
-	for _, note := range notes {
-		noteToNodeMap[note.Id] = common.GetNode(graph, note.Name)
-	}
+	//result := common.JoinContent(notes)
+	//common.WriteToFile(outputPath, result)
 
-	for _, note := range notes {
-		for _, link := range note.Links {
-			edge := common.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
-			edge.SetLabel("link")
-		}
-	}
-
-	log.Println("rendering to file")
-	common.SaveGraphToFile(g, graph, string(outputPath))
 	log.Println("file saved to", outputPath)
 }
 
@@ -54,7 +42,7 @@ func getNotes(folder common.Path) []*common.Note {
 
 func parseArguments() (common.Path, common.Path, error) {
 	notesPath := flag.String("notesPath", "", "a path to notes folder")
-	outputPath := flag.String("outputPath", "./", "a path to rendered graph file")
+	outputPath := flag.String("outputPath", "./", "a path to result join file")
 	flag.Parse()
 
 	if *notesPath == "" || *outputPath == "" {
