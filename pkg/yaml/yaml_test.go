@@ -13,7 +13,7 @@ func TestParseForYamlHeader(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *YamlHeader
+		want *Header
 	}{
 		{
 			name: "top yaml header",
@@ -26,7 +26,7 @@ func TestParseForYamlHeader(t *testing.T) {
 				"# header",
 				"some value",
 			}},
-			want: &YamlHeader{
+			want: &Header{
 				Content: []string{
 					"---",
 					"title: ",
@@ -48,7 +48,7 @@ func TestParseForYamlHeader(t *testing.T) {
 				"tags: ",
 				"---",
 			}},
-			want: &YamlHeader{
+			want: &Header{
 				Content: []string{
 					"---",
 					"title: ",
@@ -65,7 +65,7 @@ func TestParseForYamlHeader(t *testing.T) {
 				"# header",
 				"some value",
 			}},
-			want: &YamlHeader{
+			want: &Header{
 				Content: nil,
 				From:    -1,
 				To:      -1,
@@ -115,7 +115,7 @@ func TestYamlHeader_Exists(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			y := YamlHeader{
+			y := Header{
 				Content: tt.fields.Content,
 				From:    tt.fields.From,
 				To:      tt.fields.To,

@@ -8,35 +8,35 @@ import (
 	"strings"
 )
 
-const YamlDelimiter = "---"
+const Delimiter = "---"
 const (
 	yamlNotFound = iota
 	readingYaml
 )
 
-type YamlHeader struct {
+type Header struct {
 	Content  []string
 	From, To int
 }
 
-func (y YamlHeader) String() string {
+func (y Header) String() string {
 	return fmt.Sprintf("%d:%d\n%s", y.From, y.To, y.Content)
 }
 
-func NewYamlHeader(content []string, from int, to int) *YamlHeader {
-	return &YamlHeader{Content: content, From: from, To: to}
+func NewYamlHeader(content []string, from int, to int) *Header {
+	return &Header{Content: content, From: from, To: to}
 }
 
-func (y YamlHeader) Exists() bool {
+func (y Header) Exists() bool {
 	return y.From != -1
 }
 
-func ParseForYamlHeader(content []string) *YamlHeader {
+func ParseForYamlHeader(content []string) *Header {
 	from := -1
 	state := yamlNotFound
 
 	for i, line := range content {
-		if strings.HasPrefix(line, YamlDelimiter) {
+		if strings.HasPrefix(line, Delimiter) {
 			switch state {
 			case yamlNotFound:
 				state = readingYaml
@@ -99,7 +99,7 @@ func RemoveHeader(path sys.Path, content []string) ([]string, bool) {
 	return append(result, body[1:]...), true
 }
 
-func getTagsFromYaml(header *YamlHeader) (bool, string) {
+func getTagsFromYaml(header *Header) (bool, string) {
 	for _, line := range header.Content {
 		line = strings.TrimSpace(line)
 
