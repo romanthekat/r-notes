@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/goccy/go-graphviz/cgraph"
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 )
 
@@ -19,40 +19,40 @@ func main() {
 	notes := getNotes(folder)
 
 	log.Println("preparing graph")
-	g, graph, finishFunc := common.InitGraphviz()
+	g, graph, finishFunc := core.InitGraphviz()
 	defer finishFunc()
 
 	noteToNodeMap := make(map[string]*cgraph.Node)
 	for _, note := range notes {
-		noteToNodeMap[note.Id] = common.GetNode(graph, note.Name)
+		noteToNodeMap[note.Id] = core.GetNode(graph, note.Name)
 	}
 
 	for _, note := range notes {
 		for _, link := range note.Links {
-			edge := common.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
+			edge := core.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
 			edge.SetLabel("link")
 		}
 	}
 
 	log.Println("rendering to file")
-	common.SaveGraphToFile(g, graph, string(outputPath))
+	core.SaveGraphToFile(g, graph, string(outputPath))
 	log.Println("file saved to", outputPath)
 }
 
-func getNotes(folder common.Path) []*common.Note {
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+func getNotes(folder core.Path) []*core.Note {
+	paths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	notes := common.NewNotesByPaths(paths)
-	common.FillLinks(notes)
-	common.FillTags(notes)
+	notes := core.NewNotesByPaths(paths)
+	core.FillLinks(notes)
+	core.FillTags(notes)
 
 	return notes
 }
 
-func parseArguments() (common.Path, common.Path, error) {
+func parseArguments() (core.Path, core.Path, error) {
 	notesPath := flag.String("notesPath", "", "a path to notes folder")
 	outputPath := flag.String("outputPath", "./", "a path to rendered graph file")
 	flag.Parse()
@@ -61,5 +61,5 @@ func parseArguments() (common.Path, common.Path, error) {
 		return "", "", fmt.Errorf("provide both 'notesPath' and 'outputPath'")
 	}
 
-	return common.Path(*notesPath), common.Path(*outputPath), nil
+	return core.Path(*notesPath), core.Path(*outputPath), nil
 }

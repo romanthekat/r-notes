@@ -1,4 +1,4 @@
-package common
+package core
 
 func JoinContent(notes []*Note) []string {
 	var result []string

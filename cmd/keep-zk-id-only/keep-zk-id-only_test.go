@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"testing"
 )
 
 func Test_getFilepathOnlyId(t *testing.T) {
 	type args struct {
-		path common.Path
+		path core.Path
 		id   string
 	}
 	tests := []struct {
@@ -35,7 +35,7 @@ func Test_getFilepathOnlyId(t *testing.T) {
 
 func Test_parseNoteName(t *testing.T) {
 	type args struct {
-		path common.Path
+		path core.Path
 	}
 	tests := []struct {
 		name string

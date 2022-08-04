@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 )
 
@@ -16,31 +16,31 @@ func main() {
 	log.Println("obtaining notes")
 	notes := getNotes(folder)
 
-	notes = common.SortByRank(notes)
+	notes = core.SortByRank(notes)
 	//for _, note := range notes {
 	//	fmt.Println(note.String())
 	//}
 
-	result := common.JoinContent(notes)
-	common.WriteToFile(outputPath, result)
+	result := core.JoinContent(notes)
+	core.WriteToFile(outputPath, result)
 
 	log.Println("file saved to", outputPath)
 }
 
-func getNotes(folder common.Path) []*common.Note {
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+func getNotes(folder core.Path) []*core.Note {
+	paths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	notes := common.NewNotesByPaths(paths)
-	common.FillLinks(notes)
-	common.FillTags(notes)
+	notes := core.NewNotesByPaths(paths)
+	core.FillLinks(notes)
+	core.FillTags(notes)
 
 	return notes
 }
 
-func parseArguments() (common.Path, common.Path, error) {
+func parseArguments() (core.Path, core.Path, error) {
 	notesPath := flag.String("notesPath", "", "a path to notes folder")
 	outputPath := flag.String("outputPath", "./", "a path to result join file")
 	flag.Parse()
@@ -49,5 +49,5 @@ func parseArguments() (common.Path, common.Path, error) {
 		return "", "", fmt.Errorf("provide both 'notesPath' and 'outputPath'")
 	}
 
-	return common.Path(*notesPath), common.Path(*outputPath), nil
+	return core.Path(*notesPath), core.Path(*outputPath), nil
 }

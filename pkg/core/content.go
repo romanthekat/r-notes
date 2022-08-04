@@ -1,4 +1,4 @@
-package common
+package core
 
 //IsSameContent compares to slices of strings
 //TODO having ~contentHash, e.g. more generic approach for detecting changes, may be useful

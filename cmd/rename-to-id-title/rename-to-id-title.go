@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,31 +10,31 @@ import (
 )
 
 func main() {
-	folder, err := common.GetNotesFolderArg()
+	folder, err := core.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("reading notes at " + folder)
 
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+	paths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("found notes:", len(paths))
 
 	for _, path := range paths {
-		if !common.IsZkId(common.GetFilename(path)) {
+		if !core.IsZkId(core.GetFilename(path)) {
 			fmt.Printf("filename of %s is not ZK ID, skipping\n", path)
 			continue
 		}
 
-		content, err := common.ReadFile(path)
+		content, err := core.ReadFile(path)
 		if err != nil {
 			fmt.Printf("error during reading content of %s: %s\n", path, err)
 			continue
 		}
 
-		name, err := common.GetNoteNameByNoteContent(content)
+		name, err := core.GetNoteNameByNoteContent(content)
 		if err != nil {
 			fmt.Printf("error during getting note name of %s: %s\n", path, err)
 			continue
@@ -50,11 +50,11 @@ func main() {
 	}
 }
 
-func getPathWithIdAndTitle(path common.Path, name string) string {
+func getPathWithIdAndTitle(path core.Path, name string) string {
 	replacer := strings.NewReplacer("/", " ", "\\", " ")
 	resultName := replacer.Replace(name)
 	resultName = strings.Trim(resultName, " .")
 
 	return fmt.Sprintf("%s/%s %s%s",
-		filepath.Dir(string(path)), common.GetFilename(path), resultName, common.MdExtension)
+		filepath.Dir(string(path)), core.GetFilename(path), resultName, core.MdExtension)
 }

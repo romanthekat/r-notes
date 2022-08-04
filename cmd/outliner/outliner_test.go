@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"reflect"
 	"testing"
 )
 
 func Test_getNotesOutline(t *testing.T) {
 	type args struct {
-		note    *common.Note
+		note    *core.Note
 		padding string
 		result  []string
 	}
@@ -20,9 +20,9 @@ func Test_getNotesOutline(t *testing.T) {
 		{
 			name: "main",
 			args: args{
-				note: common.NewNoteWithLinks("202105122138", "note", "/path/to/202105122138 note.md", []string{""},
-					[]*common.Note{
-						common.NewNote("202105122139", "child", "", []string{""}),
+				note: core.NewNoteWithLinks("202105122138", "note", "/path/to/202105122138 note.md", []string{""},
+					[]*core.Note{
+						core.NewNote("202105122139", "child", "", []string{""}),
 					},
 					nil),
 				padding: "",
@@ -42,7 +42,7 @@ func Test_getNotesOutline(t *testing.T) {
 
 func Test_getNoteName(t *testing.T) {
 	type args struct {
-		path common.Path
+		path core.Path
 	}
 	tests := []struct {
 		name string
@@ -59,7 +59,7 @@ func Test_getNoteName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := common.GetFilename(tt.args.path); got != tt.want {
+			if got := core.GetFilename(tt.args.path); got != tt.want {
 				t.Errorf("GetFilename() = %v, want %v", got, tt.want)
 			}
 		})

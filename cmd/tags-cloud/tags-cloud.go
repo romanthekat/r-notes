@@ -2,19 +2,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 	"sort"
 )
 
 func main() {
-	folder, err := common.GetNotesFolderArg()
+	folder, err := core.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	notes := getNotes(folder)
-	common.FillTags(notes)
+	core.FillTags(notes)
 
 	tagsMap := make(map[string]int)
 	for _, note := range notes {
@@ -39,14 +39,14 @@ func main() {
 	}
 }
 
-func getNotes(folder common.Path) []*common.Note {
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+func getNotes(folder core.Path) []*core.Note {
+	paths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	notes := common.NewNotesByPaths(paths)
-	common.FillLinks(notes)
+	notes := core.NewNotesByPaths(paths)
+	core.FillLinks(notes)
 
 	return notes
 }

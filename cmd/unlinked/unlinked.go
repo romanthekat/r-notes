@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 )
 
 func main() {
-	folder, err := common.GetNotesFolderArg()
+	folder, err := core.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -17,19 +17,19 @@ func main() {
 
 	for _, note := range notes {
 		if len(note.Links) == 0 && len(note.Backlinks) == 0 {
-			fmt.Println(common.GetNoteLink(note))
+			fmt.Println(core.GetNoteLink(note))
 		}
 	}
 }
 
-func getNotes(folder common.Path) []*common.Note {
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+func getNotes(folder core.Path) []*core.Note {
+	paths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	notes := common.NewNotesByPaths(paths)
-	common.FillLinks(notes)
+	notes := core.NewNotesByPaths(paths)
+	core.FillLinks(notes)
 
 	return notes
 }

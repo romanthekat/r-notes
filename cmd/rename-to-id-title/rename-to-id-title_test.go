@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"testing"
 )
 
 func Test_getPathWithIdAndTitle(t *testing.T) {
 	type args struct {
-		path common.Path
+		path core.Path
 		name string
 	}
 	tests := []struct {
@@ -18,7 +18,7 @@ func Test_getPathWithIdAndTitle(t *testing.T) {
 		{
 			name: "generic note",
 			args: struct {
-				path common.Path
+				path core.Path
 				name string
 			}{
 				path: "/ururu/202106062104.md",
@@ -28,7 +28,7 @@ func Test_getPathWithIdAndTitle(t *testing.T) {
 		{
 			name: "no tailing spaces",
 			args: struct {
-				path common.Path
+				path core.Path
 				name string
 			}{
 				path: "/ururu/202106062104.md",
@@ -38,7 +38,7 @@ func Test_getPathWithIdAndTitle(t *testing.T) {
 		{
 			name: "no tailing .",
 			args: struct {
-				path common.Path
+				path core.Path
 				name string
 			}{
 				path: "/ururu/202106062104.md",
@@ -48,7 +48,7 @@ func Test_getPathWithIdAndTitle(t *testing.T) {
 		{
 			name: "name has symbols which can't used in filename",
 			args: struct {
-				path common.Path
+				path core.Path
 				name string
 			}{
 				path: "/ururu/202106062104.md",

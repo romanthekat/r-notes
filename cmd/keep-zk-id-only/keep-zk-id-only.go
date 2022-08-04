@@ -2,20 +2,20 @@ package main
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 	"os"
 	"path/filepath"
 )
 
 func main() {
-	folder, err := common.GetNotesFolderArg()
+	folder, err := core.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("reading notes at " + folder)
 
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+	paths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,14 +33,14 @@ func main() {
 			continue
 		}
 
-		content, err := common.ReadFile(path)
+		content, err := core.ReadFile(path)
 		if err != nil {
 			panic(err)
 		}
 
-		header := common.GetYamlHeader(id, name, "")
+		header := core.GetYamlHeader(id, name, "")
 
-		common.WriteToFile(path, append(header, content...))
+		core.WriteToFile(path, append(header, content...))
 
 		newPath := getFilepathOnlyId(path, id)
 		err = os.Rename(string(path), newPath)
@@ -52,14 +52,14 @@ func main() {
 	}
 }
 
-func getFilepathOnlyId(oldPath common.Path, id string) string {
+func getFilepathOnlyId(oldPath core.Path, id string) string {
 	return filepath.Dir(string(oldPath)) + "/" + id + ".md"
 }
 
-func parseNoteNameByPath(path common.Path) (isZettel bool, id, name string) {
+func parseNoteNameByPath(path core.Path) (isZettel bool, id, name string) {
 	if filepath.Ext(string(path)) != ".md" {
 		return false, "", ""
 	}
 
-	return common.ParseNoteFilename(common.GetFilename(path))
+	return core.ParseNoteFilename(core.GetFilename(path))
 }

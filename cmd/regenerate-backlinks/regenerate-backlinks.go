@@ -1,23 +1,23 @@
 package main
 
 import (
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 )
 
 func main() {
-	folder, err := common.GetNotesFolderArg()
+	folder, err := core.GetNotesFolderArg()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	paths, err := common.GetNotesPaths(folder, common.MdExtension)
+	paths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	notes := common.NewNotesByPaths(paths)
-	common.FillLinks(notes)
+	notes := core.NewNotesByPaths(paths)
+	core.FillLinks(notes)
 
-	common.SaveBacklinksInFiles(notes)
+	core.SaveBacklinksInFiles(notes)
 }

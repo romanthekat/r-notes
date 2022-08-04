@@ -2,7 +2,7 @@
 
 This is a collection of tools I use for my notes in markdown, zettelkasten alike, format.  
 A tool relies on `[[wiki-link]]` format to find related notes, and time-based id in format `202012051855`.  
-Both `[[202012121859]]` and `[[202012121859 note taking apps]]` wikilinks format supported, though the latter is used for auto-generated files as being more exact and widely supported by different apps. 
+Both `[[202012121859 note taking apps]]` and `[[202012121859]]` wikilinks format supported, though the former is used for auto-generated files as being more exact and widely supported by different apps. 
 
 Always do backups :)
 

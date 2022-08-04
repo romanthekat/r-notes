@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/romanthekat/r-notes/pkg/common"
+	"github.com/romanthekat/r-notes/pkg/core"
 	"log"
 	"path/filepath"
 	"time"
@@ -15,24 +15,24 @@ const (
 )
 
 func main() {
-	path, folder, err := common.GetNoteFileArgument(common.MdExtension)
+	path, folder, err := core.GetNoteFileArgument(core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("generating outline for path", path)
-	_, id, _ := common.ParseNoteFilename(common.GetFilename(path))
+	_, id, _ := core.ParseNoteFilename(core.GetFilename(path))
 
-	notesPaths, err := common.GetNotesPaths(folder, common.MdExtension)
+	notesPaths, err := core.GetNotesPaths(folder, core.MdExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("found .md files:", len(notesPaths))
 	log.Println("parsing links")
 
-	notes := common.NewNotesByPaths(notesPaths)
-	common.FillLinks(notes)
+	notes := core.NewNotesByPaths(notesPaths)
+	core.FillLinks(notes)
 
-	var targetNote *common.Note
+	var targetNote *core.Note
 	for _, note := range notes {
 		if note.Id == id {
 			targetNote = note
@@ -58,17 +58,17 @@ func main() {
 	resultContent := []string{fmt.Sprintf("# %s %s", resultId, indexTitle), tag}
 	resultContent = append(resultContent, outline...)
 
-	common.WriteToFile(resultPath, resultContent)
+	core.WriteToFile(resultPath, resultContent)
 }
 
-func getResultPath(path common.Path, title string) (id string, resultPath common.Path) {
+func getResultPath(path core.Path, title string) (id string, resultPath core.Path) {
 	basePath := filepath.Dir(string(path))
 	zkId := time.Now().Format("200601021504")
-	return zkId, common.Path(
+	return zkId, core.Path(
 		fmt.Sprintf("%s/%s %s.md", basePath, zkId, title))
 }
 
-func getNotesOutline(note *common.Note, padding string, levelsLeft int, result []string) []string {
+func getNotesOutline(note *core.Note, padding string, levelsLeft int, result []string) []string {
 	if levelsLeft == 0 {
 		return result
 	}
@@ -77,7 +77,7 @@ func getNotesOutline(note *common.Note, padding string, levelsLeft int, result [
 		return result
 	}
 
-	noteLink := common.GetNoteLink(note)
+	noteLink := core.GetNoteLink(note)
 	result = append(result, fmt.Sprintf("%s- %s%s", padding, noteLink, markdownLineBreak))
 	for _, child := range note.Links {
 		result = getNotesOutline(child, padding+notesDelimiter, levelsLeft-1, result)
