@@ -144,7 +144,10 @@ Install:
 
 
 ### 7. Rank join
-Join all notes in a folder ordered by rank, descending.
+Join all notes in a folder ordered by rank, descending.  
+So ideally you get all your notes gathered together, roughly grouped in an order of 'importance'.
+
+Ranking logic is pretty naive, it's more of an experiment without real purpose:
 - add 1 for each link
 - add 2 for each backlink
 - add 8 for each tag (a few tags get more points)
