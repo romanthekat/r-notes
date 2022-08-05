@@ -1,19 +1,18 @@
 # r-notes
 
 This is a collection of tools I use for my notes in markdown, zettelkasten alike, format.  
-A tool relies on `[[wiki-link]]` format to find related notes, and time-based id in format `202012051855`.  
+Tools rely on `[[wiki-link]]` format to find related notes, and time-based id in format `202012051855`.  
 Both `[[202012121859 note taking apps]]` and `[[202012121859]]` wikilinks format supported, though the former is used for auto-generated files as being more exact and widely supported by different apps. 
 
 Always do backups :)
 
-## CLI tools
-### Build a tool manually
+## Build a tool manually
 `go build ./cmd/CMD/`  
 `go install ./cmd/CMD/`  
 `go run ./cmd/CMD/`
 
 
-### 1. Regenerate-backlinks
+## 1. Regenerate-backlinks
 Recalculates backlinks for notes, updates files appending the result to the end of a file.   
 For example:
 ```
@@ -35,10 +34,9 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/regenerate-backlinks@latest`
----
 
 
-### 2. Sub-graph
+## 2. Sub-graph
 Renders subgraph by provided note file.
 
 Usage:  
@@ -62,10 +60,9 @@ Example:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/sub-graph@latest`
----
 
 
-### 3. Full-graph
+## 3. Full-graph
 Renders graph of all notes within provided folder.  
 Please note, 700+ notes' graph will be somewhat big.
 
@@ -84,10 +81,9 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/unlinked@latest`
----
+  
 
-
-### 5. Tags cloud
+## 5. Tags cloud
 Prints list of tags ordered by popularity.
 
 Usage:  
@@ -95,10 +91,9 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/tags-cloud@latest`
----
 
 
-### 6. Outliner
+## 6. Outliner
 Generates an outline note for a note.  
 For example with 3 levels depth (note -> links -> links of links):
 ```
@@ -145,10 +140,9 @@ will generate `/path/to/DATE_ZK_ID index for 'note title'.md`
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/outliner@latest`
----
 
 
-### 7. Rank join
+## 7. Rank join
 Join all notes in a folder ordered by rank, descending.  
 So ideally you get all your notes gathered together, roughly grouped in an order of 'importance'.
 
@@ -162,5 +156,4 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/rank-join@latest`
----
 
