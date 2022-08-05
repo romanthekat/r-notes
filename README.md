@@ -136,7 +136,7 @@ For example with 3 levels depth (note -> links -> links of links):
 
 Usage:  
 `outliner "path/to/note.md"`  
-will generate `/path/to/DATE_ZK_ID index for 'note title'.md`
+will generate `/path/to/DATE_ZK_ID index - note title.md`
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/outliner@latest`
