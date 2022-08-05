@@ -35,6 +35,7 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/regenerate-backlinks@latest`
+---
 
 
 ### 2. Sub-graph
@@ -61,6 +62,7 @@ Example:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/sub-graph@latest`
+---
 
 
 ### 3. Full-graph
@@ -82,6 +84,7 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/unlinked@latest`
+---
 
 
 ### 5. Tags cloud
@@ -92,6 +95,7 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/tags-cloud@latest`
+---
 
 
 ### 6. Outliner
@@ -141,6 +145,7 @@ will generate `/path/to/DATE_ZK_ID index for 'note title'.md`
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/outliner@latest`
+---
 
 
 ### 7. Rank join
@@ -157,3 +162,5 @@ Usage:
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/rank-join@latest`
+---
+
