@@ -4,17 +4,14 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/romanthekat/r-notes/pkg/core"
+	"github.com/romanthekat/r-notes/pkg/outline"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
-	"path/filepath"
-	"time"
 )
 
 const (
-	notesDelimiter    = "    "
-	markdownLineBreak = "  "
-	tag               = "#index"
+	tag = "#index"
 )
 
 func main() {
@@ -36,18 +33,18 @@ func main() {
 	}
 
 	log.Printf("outline:\n")
-	outline := getNotesOutline(targetNote, "", 3, nil)
-	for _, line := range outline {
+	result := outline.GetNotesOutline(targetNote, "", 3, nil)
+	for _, line := range result {
 		fmt.Println(line)
 	}
 
 	indexTitle := fmt.Sprintf("index - %s", targetNote.Name)
 
-	resultId, resultPath := getResultPath(path, indexTitle)
+	resultId, resultPath := outline.GetResultPath(path, indexTitle)
 	fmt.Printf("writing to %s\n", resultPath)
 
 	resultContent := []string{fmt.Sprintf("# %s %s", resultId, indexTitle), tag}
-	resultContent = append(resultContent, outline...)
+	resultContent = append(resultContent, result...)
 
 	sys.WriteToFile(resultPath, resultContent)
 }
@@ -68,29 +65,4 @@ func getTargetNote(path sys.Path, notes []*core.Note) (*core.Note, error) {
 	}
 
 	return targetNote, nil
-}
-
-func getResultPath(path sys.Path, title string) (id string, resultPath sys.Path) {
-	basePath := filepath.Dir(string(path))
-	zkId := time.Now().Format("200601021504")
-	return zkId, sys.Path(
-		fmt.Sprintf("%s/%s %s.md", basePath, zkId, title))
-}
-
-func getNotesOutline(note *core.Note, padding string, levelsLeft int, result []string) []string {
-	if levelsLeft == 0 {
-		return result
-	}
-
-	if note == nil {
-		return result
-	}
-
-	noteLink := core.GetNoteLink(note)
-	result = append(result, fmt.Sprintf("%s- %s%s", padding, noteLink, markdownLineBreak))
-	for _, child := range note.Links {
-		result = getNotesOutline(child, padding+notesDelimiter, levelsLeft-1, result)
-	}
-
-	return result
 }

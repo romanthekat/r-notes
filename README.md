@@ -141,3 +141,16 @@ will generate `/path/to/DATE_ZK_ID index for 'note title'.md`
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/outliner@latest`
+
+
+### 7. Rank join
+Join all notes in a folder ordered by rank, descending.
+- add 1 for each link
+- add 2 for each backlink
+- add 8 for each tag (a few tags get more points)
+
+Usage:  
+`rank-join -notesPath="path/to/notes/folder" -outputPath="path/to/result.md"`
+
+Install:  
+`go install github.com/romanthekat/r-notes/cmd/rank-join@latest`

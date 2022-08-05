@@ -19,7 +19,7 @@ func GetNoteRank(note *Note) int {
 		if tagRank, ok := tagsRanks[tag]; ok {
 			rank += tagRank
 		} else {
-			rank += 1
+			rank += 8
 		}
 	}
 

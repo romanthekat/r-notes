@@ -1,4 +1,4 @@
-package main
+package outline
 
 import (
 	"github.com/romanthekat/r-notes/pkg/core"
@@ -34,8 +34,8 @@ func Test_getNotesOutline(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getNotesOutline(tt.args.note, tt.args.padding, 3, tt.args.result); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getNotesOutline() = %v, want %v", got, tt.want)
+			if got := GetNotesOutline(tt.args.note, tt.args.padding, 3, tt.args.result); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetNotesOutline() = %v, want %v", got, tt.want)
 			}
 		})
 	}

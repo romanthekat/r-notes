@@ -2,6 +2,8 @@ package md
 
 import "strings"
 
+const MarkdownLineBreak = "  "
+
 func IsFirstLevelHeader(line string) bool {
 	return strings.HasPrefix(line, "# ")
 }

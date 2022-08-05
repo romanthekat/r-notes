@@ -21,9 +21,6 @@ func main() {
 	}
 
 	notes = core.SortByRank(notes)
-	//for _, note := range notes {
-	//	fmt.Println(note.String())
-	//}
 
 	result := core.JoinContent(notes)
 	sys.WriteToFile(outputPath, result)
