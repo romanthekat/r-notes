@@ -1,12 +1,13 @@
 package core
 
+const JoinedNotesSeparator = "  \t\n  \t\n"
+
 func JoinContent(notes []*Note) []string {
 	var result []string
 
-	notesBreak := []string{"  \t", "  \t"}
 	for _, note := range notes {
 		result = append(result, note.Content...)
-		result = append(result, notesBreak...)
+		result = append(result, JoinedNotesSeparator)
 	}
 
 	return result
