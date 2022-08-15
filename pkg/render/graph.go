@@ -32,10 +32,6 @@ func InitGraphviz() (g *graphviz.Graphviz, graph *cgraph.Graph, finishFunc func(
 	}
 }
 
-func MarkMainNode(node *cgraph.Node) {
-	node.SetColor(MainNodeColor)
-}
-
 func GetNode(graph *cgraph.Graph, noteName string, tags map[string]any) *cgraph.Node {
 	node, err := graph.CreateNode(noteName)
 	if err != nil {

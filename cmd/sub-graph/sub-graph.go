@@ -98,12 +98,12 @@ func getNotesForSubgraphRecursive(
 		}
 	}
 
-	for _, link := range note.Backlinks {
-		if _, ok := result[link]; !ok {
-			result[link] = struct{}{}
-			addedNotes = append(addedNotes, link)
-		}
-	}
+	//for _, link := range note.Backlinks {
+	//	if _, ok := result[link]; !ok {
+	//		result[link] = struct{}{}
+	//		addedNotes = append(addedNotes, link)
+	//	}
+	//}
 
 	for _, addedNote := range addedNotes {
 		result = getNotesForSubgraphRecursive(addedNote, levelsLeft-1, ignoreTags, result)
@@ -149,13 +149,13 @@ func getNodes(notes []*core.Note, graph *cgraph.Graph) map[string]*cgraph.Node {
 func renderMainNodes(noteToNodeMap map[string]*cgraph.Node, note *core.Note) {
 	node := noteToNodeMap[note.Id]
 
-	render.MarkMainNode(node)
+	node.SetColor(render.MainNodeColor)
 	node.SetGroup(render.MainNodeGroup)
 
 	for _, link := range note.Links {
 		if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
-			linkNode.SetGroup(render.MainNodeGroup)
 			linkNode.SetColor(render.DirectLinksColor)
+			linkNode.SetGroup(render.MainNodeGroup)
 		}
 	}
 }
