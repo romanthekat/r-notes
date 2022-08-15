@@ -13,29 +13,31 @@ import (
 	"strings"
 )
 
+const MaxBacklinks = 1
+
 func main() {
 	notePath, folderPath, graphDepth, ignoreTags, outputPath, err := parseArguments()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("note path: %s\n", notePath)
+	log.Printf("mainNote path: %s\n", notePath)
 	log.Printf("graph output path: %s\n", outputPath)
 	log.Printf("graph depth: %d\n", graphDepth)
 	log.Printf("tags to ignore: %s\n", ignoreTags)
 
 	log.Println("obtaining notes")
-	note, _ := getNotes(notePath, folderPath)
+	mainNote, _ := getNotes(notePath, folderPath)
 
 	log.Println("preparing graph")
 	g, graph, finishFunc := render.InitGraphviz()
 	defer finishFunc()
 
 	log.Println("getting notes for subgraph")
-	notes := getNotesForSubgraph(note, graphDepth, ignoreTags)
+	notes := getNotesForSubgraph(mainNote, graphDepth, ignoreTags)
 	log.Println("notes in graph:", len(notes))
 
 	nodesMap := getNodes(notes, graph)
-	renderMainNodes(nodesMap, note)
+	renderMainNodes(nodesMap, mainNote)
 
 	edgesMap := make(map[string]map[string]*cgraph.Edge)
 	for _, note := range notes {
@@ -49,6 +51,9 @@ func main() {
 				}
 
 				edge := render.GetEdge(graph, nodesMap[note.Id], linkNode, "link"+note.Id+link.Id)
+				if note.Id == mainNote.Id {
+					edge.SetWeight(8.0)
+				}
 				edgesMap[note.Id][link.Id] = edge
 			}
 		}
@@ -98,12 +103,16 @@ func getNotesForSubgraphRecursive(
 		}
 	}
 
-	//for _, link := range note.Backlinks {
-	//	if _, ok := result[link]; !ok {
-	//		result[link] = struct{}{}
-	//		addedNotes = append(addedNotes, link)
-	//	}
-	//}
+	for i, link := range note.Backlinks {
+		if _, ok := result[link]; !ok {
+			result[link] = struct{}{}
+			addedNotes = append(addedNotes, link)
+
+			if i > MaxBacklinks {
+				break
+			}
+		}
+	}
 
 	for _, addedNote := range addedNotes {
 		result = getNotesForSubgraphRecursive(addedNote, levelsLeft-1, ignoreTags, result)
