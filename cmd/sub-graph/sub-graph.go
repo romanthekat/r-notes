@@ -6,14 +6,13 @@ import (
 	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/render"
+	"github.com/romanthekat/r-notes/pkg/subgraph"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"path/filepath"
 	"strings"
 )
-
-const MaxBacklinks = 1
 
 func main() {
 	notePath, folderPath, graphDepth, ignoreTags, outputPath, err := parseArguments()
@@ -33,11 +32,11 @@ func main() {
 	defer finishFunc()
 
 	log.Println("getting notes for subgraph")
-	notes := getNotesForSubgraph(mainNote, graphDepth, ignoreTags)
+	notes := subgraph.GetNotesForSubgraph(mainNote, graphDepth, ignoreTags)
 	log.Println("notes in graph:", len(notes))
 
-	nodesMap := getNodes(notes, graph)
-	renderMainNodes(nodesMap, mainNote)
+	nodesMap := subgraph.GetNodes(notes, graph)
+	subgraph.RenderMainNodes(nodesMap, mainNote)
 
 	edgesMap := make(map[string]map[string]*cgraph.Edge)
 	for _, note := range notes {
@@ -64,63 +63,6 @@ func main() {
 	log.Println("graph saved to:", outputPath)
 }
 
-func getNotesForSubgraph(note *core.Note, levelsLeft int, ignoreTags []string) []*core.Note {
-	var result []*core.Note
-
-	notesMap := getNotesForSubgraphRecursive(note, levelsLeft, ignoreTags, make(map[*core.Note]any))
-	for key := range notesMap {
-		result = append(result, key)
-	}
-
-	return result
-}
-
-func getNotesForSubgraphRecursive(
-	note *core.Note,
-	levelsLeft int,
-	ignoreTags []string,
-	result map[*core.Note]any) map[*core.Note]any {
-	if levelsLeft <= 0 {
-		return result
-	}
-
-	if len(note.Tags) > 0 {
-		for _, tag := range ignoreTags {
-			if _, ok := note.Tags[tag]; ok {
-				log.Printf("[INFO] note with Path '%s' ignored because of tag '%s'\n", note.Path, tag)
-				return result
-			}
-		}
-	}
-
-	result[note] = struct{}{}
-	var addedNotes []*core.Note
-
-	for _, link := range note.Links {
-		if _, ok := result[link]; !ok {
-			result[link] = struct{}{}
-			addedNotes = append(addedNotes, link)
-		}
-	}
-
-	for i, link := range note.Backlinks {
-		if _, ok := result[link]; !ok {
-			result[link] = struct{}{}
-			addedNotes = append(addedNotes, link)
-
-			if i > MaxBacklinks {
-				break
-			}
-		}
-	}
-
-	for _, addedNote := range addedNotes {
-		result = getNotesForSubgraphRecursive(addedNote, levelsLeft-1, ignoreTags, result)
-	}
-
-	return result
-}
-
 func getNotes(notePath, folderPath sys.Path) (*core.Note, []*core.Note) {
 	isZettel, id, _ := zk.ParseNoteFilename(sys.GetFilename(notePath))
 	if !isZettel {
@@ -145,30 +87,6 @@ func getNotes(notePath, folderPath sys.Path) (*core.Note, []*core.Note) {
 	}
 
 	return targetNote, notes
-}
-
-func getNodes(notes []*core.Note, graph *cgraph.Graph) map[string]*cgraph.Node {
-	nodesMap := make(map[string]*cgraph.Node)
-	for _, note := range notes {
-		nodesMap[note.Id] = render.GetNode(graph, note.Name, note.Tags)
-	}
-	return nodesMap
-}
-
-func renderMainNodes(noteToNodeMap map[string]*cgraph.Node, note *core.Note) {
-	node := noteToNodeMap[note.Id]
-
-	node.SetColor(render.MainNodeColor)
-	node.SetGroup(render.MainNodeGroup)
-	node.SetStyle(cgraph.BoldNodeStyle)
-
-	for _, link := range note.Links {
-		if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
-			linkNode.SetColor(render.DirectLinksColor)
-			linkNode.SetGroup(render.MainNodeGroup)
-			linkNode.SetStyle(cgraph.BoldNodeStyle)
-		}
-	}
 }
 
 func parseArguments() (sys.Path, sys.Path, int, []string, sys.Path, error) {
