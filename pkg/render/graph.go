@@ -6,6 +6,9 @@ import (
 	"log"
 )
 
+const MainNodeColor = "red"
+const IndexNodeColor = "green"
+
 func InitGraphviz() (g *graphviz.Graphviz, graph *cgraph.Graph, finishFunc func()) {
 	g = graphviz.New()
 
@@ -23,10 +26,18 @@ func InitGraphviz() (g *graphviz.Graphviz, graph *cgraph.Graph, finishFunc func(
 	}
 }
 
-func GetNode(graph *cgraph.Graph, name string) *cgraph.Node {
-	node, err := graph.CreateNode(name)
+func MarkMainNode(node *cgraph.Node) {
+	node.SetColor(MainNodeColor)
+}
+
+func GetNode(graph *cgraph.Graph, noteName string, tags map[string]any) *cgraph.Node {
+	node, err := graph.CreateNode(noteName)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if _, ok := tags["index"]; ok {
+		node.SetColor(IndexNodeColor)
 	}
 
 	return node

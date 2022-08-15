@@ -7,7 +7,7 @@ import (
 )
 
 // FillTags adds tags information to notes
-//TODO consider creating benchmarks
+// TODO consider creating benchmarks
 func FillTags(notes []*Note) []*Note {
 	for _, note := range notes {
 		tags := make(map[string]any)
@@ -21,9 +21,9 @@ func FillTags(notes []*Note) []*Note {
 	return notes
 }
 
-//getTags extracts #TAG from provided Note content
-//TODO consider unification w/ links generation
-//TODO consider generating tags and links w/ one content scanning
+// getTags extracts #TAG from provided Note content
+// TODO consider unification w/ links generation
+// TODO consider generating tags and links w/ one content scanning
 func getTags(content []string) []string {
 	set := make(map[string]struct{})
 

@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-//TODO seems to be too big on 700+ notes
+// TODO seems to be too big on 700+ notes
 func main() {
 	folder, outputPath, err := parseArguments()
 	if err != nil {
@@ -29,7 +29,7 @@ func main() {
 
 	noteToNodeMap := make(map[string]*cgraph.Node)
 	for _, note := range notes {
-		noteToNodeMap[note.Id] = render.GetNode(graph, note.Name)
+		noteToNodeMap[note.Id] = render.GetNode(graph, note.Name, note.Tags)
 	}
 
 	for _, note := range notes {

@@ -37,17 +37,25 @@ func main() {
 	log.Println("notes in graph:", len(notes))
 
 	for _, note := range notes {
-		noteToNodeMap[note.Id] = render.GetNode(graph, note.Name)
+		noteToNodeMap[note.Id] = render.GetNode(graph, note.Name, note.Tags)
 	}
 
-	node := noteToNodeMap[note.Id]
-	node.SetColor("red")
+	renderMainNodesGroup(noteToNodeMap, note)
+
+	noteToNoteMap := make(map[string]map[string]*cgraph.Edge)
 
 	for _, note := range notes {
+		noteToNoteMap[note.Id] = make(map[string]*cgraph.Edge)
+
 		for _, link := range note.Links {
-			linkNode := noteToNodeMap[link.Id]
-			if linkNode != nil {
-				render.GetEdge(graph, noteToNodeMap[note.Id], linkNode, "link")
+			if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
+				if edge, ok := noteToNoteMap[link.Id][note.Id]; ok {
+					edge.SetArrowHead(cgraph.NoneArrow)
+					continue
+				}
+
+				edge := render.GetEdge(graph, noteToNodeMap[note.Id], linkNode, "link"+note.Id+link.Id)
+				noteToNoteMap[note.Id][link.Id] = edge
 			}
 		}
 	}
@@ -55,6 +63,20 @@ func main() {
 	log.Println("rendering to file")
 	render.SaveGraphToFile(g, graph, string(outputPath))
 	log.Println("graph saved to:", outputPath)
+}
+
+func renderMainNodesGroup(noteToNodeMap map[string]*cgraph.Node, note *core.Note) {
+	node := noteToNodeMap[note.Id]
+
+	render.MarkMainNode(node)
+	node.SetGroup("main")
+
+	for _, link := range note.Links {
+		if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
+			linkNode.SetGroup("main")
+			linkNode.SetColor("blue")
+		}
+	}
 }
 
 func getNotesForSubgraph(note *core.Note, levelsLeft int, ignoreTags []string) []*core.Note {
