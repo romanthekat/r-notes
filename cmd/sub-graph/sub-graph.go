@@ -30,32 +30,26 @@ func main() {
 	g, graph, finishFunc := render.InitGraphviz()
 	defer finishFunc()
 
-	noteToNodeMap := make(map[string]*cgraph.Node)
-
 	log.Println("getting notes for subgraph")
 	notes := getNotesForSubgraph(note, graphDepth, ignoreTags)
 	log.Println("notes in graph:", len(notes))
 
+	nodesMap := getNodes(notes, graph)
+	renderMainNodes(nodesMap, note)
+
+	edgesMap := make(map[string]map[string]*cgraph.Edge)
 	for _, note := range notes {
-		noteToNodeMap[note.Id] = render.GetNode(graph, note.Name, note.Tags)
-	}
-
-	renderMainNodesGroup(noteToNodeMap, note)
-
-	noteToNoteMap := make(map[string]map[string]*cgraph.Edge)
-
-	for _, note := range notes {
-		noteToNoteMap[note.Id] = make(map[string]*cgraph.Edge)
+		edgesMap[note.Id] = make(map[string]*cgraph.Edge)
 
 		for _, link := range note.Links {
-			if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
-				if edge, ok := noteToNoteMap[link.Id][note.Id]; ok {
+			if linkNode := nodesMap[link.Id]; linkNode != nil {
+				if edge, ok := edgesMap[link.Id][note.Id]; ok {
 					edge.SetArrowHead(cgraph.NoneArrow)
 					continue
 				}
 
-				edge := render.GetEdge(graph, noteToNodeMap[note.Id], linkNode, "link"+note.Id+link.Id)
-				noteToNoteMap[note.Id][link.Id] = edge
+				edge := render.GetEdge(graph, nodesMap[note.Id], linkNode, "link"+note.Id+link.Id)
+				edgesMap[note.Id][link.Id] = edge
 			}
 		}
 	}
@@ -65,24 +59,10 @@ func main() {
 	log.Println("graph saved to:", outputPath)
 }
 
-func renderMainNodesGroup(noteToNodeMap map[string]*cgraph.Node, note *core.Note) {
-	node := noteToNodeMap[note.Id]
-
-	render.MarkMainNode(node)
-	node.SetGroup(render.MainNodeGroup)
-
-	for _, link := range note.Links {
-		if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
-			linkNode.SetGroup(render.MainNodeGroup)
-			linkNode.SetColor(render.DirectLinksColor)
-		}
-	}
-}
-
 func getNotesForSubgraph(note *core.Note, levelsLeft int, ignoreTags []string) []*core.Note {
 	var result []*core.Note
 
-	notesMap := getNotesForSubgraphRecursive(note, levelsLeft, ignoreTags, make(map[*core.Note]struct{}))
+	notesMap := getNotesForSubgraphRecursive(note, levelsLeft, ignoreTags, make(map[*core.Note]any))
 	for key := range notesMap {
 		result = append(result, key)
 	}
@@ -90,8 +70,11 @@ func getNotesForSubgraph(note *core.Note, levelsLeft int, ignoreTags []string) [
 	return result
 }
 
-func getNotesForSubgraphRecursive(note *core.Note, levelsLeft int, ignoreTags []string,
-	result map[*core.Note]struct{}) map[*core.Note]struct{} {
+func getNotesForSubgraphRecursive(
+	note *core.Note,
+	levelsLeft int,
+	ignoreTags []string,
+	result map[*core.Note]any) map[*core.Note]any {
 	if levelsLeft <= 0 {
 		return result
 	}
@@ -153,6 +136,28 @@ func getNotes(notePath, folderPath sys.Path) (*core.Note, []*core.Note) {
 	}
 
 	return targetNote, notes
+}
+
+func getNodes(notes []*core.Note, graph *cgraph.Graph) map[string]*cgraph.Node {
+	nodesMap := make(map[string]*cgraph.Node)
+	for _, note := range notes {
+		nodesMap[note.Id] = render.GetNode(graph, note.Name, note.Tags)
+	}
+	return nodesMap
+}
+
+func renderMainNodes(noteToNodeMap map[string]*cgraph.Node, note *core.Note) {
+	node := noteToNodeMap[note.Id]
+
+	render.MarkMainNode(node)
+	node.SetGroup(render.MainNodeGroup)
+
+	for _, link := range note.Links {
+		if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
+			linkNode.SetGroup(render.MainNodeGroup)
+			linkNode.SetColor(render.DirectLinksColor)
+		}
+	}
 }
 
 func parseArguments() (sys.Path, sys.Path, int, []string, sys.Path, error) {

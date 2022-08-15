@@ -70,7 +70,7 @@ func TestGetNoteLink(t *testing.T) {
 	}
 }
 
-//TODO cover more cases
+// TODO cover more cases
 func TestFillLinks(t *testing.T) {
 	notes := []*Note{
 		NewNote("202202261406", "Note one", "", []string{"[[202202261407]]", "[[202202261408]]"}),

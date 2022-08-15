@@ -22,7 +22,7 @@ func GetNoteLink(note *Note) string {
 }
 
 // FillLinks TODO make links context aware - file line at least
-//TODO consider creating benchmarks
+// TODO consider creating benchmarks
 func FillLinks(notes []*Note) []*Note {
 	notesById := make(map[string]*Note)
 
@@ -57,8 +57,8 @@ func FillLinks(notes []*Note) []*Note {
 	return notes
 }
 
-//SaveBacklinksInFiles
-//TODO can be done concurrently, if all necessary info is already in memory
+// SaveBacklinksInFiles
+// TODO can be done concurrently, if all necessary info is already in memory
 func SaveBacklinksInFiles(notes []*Note) {
 	for _, note := range notes {
 		content, err := generateContentWithBacklinks(note)
@@ -123,7 +123,7 @@ func findBacklinkHeader(note *Note) (found bool, index int, err error) {
 
 }
 
-//getWikilinks extracts [[LINK_ID]] from provided Note content
+// getWikilinks extracts [[LINK_ID]] from provided Note content
 func getWikilinks(content []string) []string {
 	set := make(map[string]struct{})
 	re := regexp.MustCompile(`\[\[([A-Za-z\d]+?[A-Za-z\d:\-Σ ]+?)]]`) //TODO compile once for app
