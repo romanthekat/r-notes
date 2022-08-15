@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-const MaxBacklinks = 1
+const MaxBacklinks = 2
 
 func GetNotesForSubgraph(note *core.Note, levelsLeft int, ignoreTags []string) []*core.Note {
 	var result []*core.Note
