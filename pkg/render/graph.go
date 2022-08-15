@@ -6,7 +6,9 @@ import (
 	"log"
 )
 
+const MainNodeGroup = "main"
 const MainNodeColor = "red"
+const DirectLinksColor = "blue"
 const IndexNodeColor = "green"
 
 func InitGraphviz() (g *graphviz.Graphviz, graph *cgraph.Graph, finishFunc func()) {
@@ -22,7 +24,11 @@ func InitGraphviz() (g *graphviz.Graphviz, graph *cgraph.Graph, finishFunc func(
 		if err := graph.Close(); err != nil {
 			log.Fatal(err)
 		}
-		g.Close()
+
+		err = g.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 

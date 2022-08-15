@@ -69,12 +69,12 @@ func renderMainNodesGroup(noteToNodeMap map[string]*cgraph.Node, note *core.Note
 	node := noteToNodeMap[note.Id]
 
 	render.MarkMainNode(node)
-	node.SetGroup("main")
+	node.SetGroup(render.MainNodeGroup)
 
 	for _, link := range note.Links {
 		if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
-			linkNode.SetGroup("main")
-			linkNode.SetColor("blue")
+			linkNode.SetGroup(render.MainNodeGroup)
+			linkNode.SetColor(render.DirectLinksColor)
 		}
 	}
 }
