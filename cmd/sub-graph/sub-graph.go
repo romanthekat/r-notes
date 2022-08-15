@@ -151,11 +151,13 @@ func renderMainNodes(noteToNodeMap map[string]*cgraph.Node, note *core.Note) {
 
 	node.SetColor(render.MainNodeColor)
 	node.SetGroup(render.MainNodeGroup)
+	node.SetStyle(cgraph.BoldNodeStyle)
 
 	for _, link := range note.Links {
 		if linkNode := noteToNodeMap[link.Id]; linkNode != nil {
 			linkNode.SetColor(render.DirectLinksColor)
 			linkNode.SetGroup(render.MainNodeGroup)
+			linkNode.SetStyle(cgraph.BoldNodeStyle)
 		}
 	}
 }
