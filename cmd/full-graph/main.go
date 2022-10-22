@@ -34,8 +34,7 @@ func main() {
 
 	for _, note := range notes {
 		for _, link := range note.Links {
-			edge := render.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
-			edge.SetLabel("link")
+			render.GetEdge(graph, noteToNodeMap[note.Id], noteToNodeMap[link.Id], "link")
 		}
 	}
 
