@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/md"
 	"github.com/romanthekat/r-notes/pkg/yaml"
-	"strconv"
+	"regexp"
 	"strings"
 )
 
@@ -26,15 +26,10 @@ func GetNoteNameByNoteContent(content []string) (name string, err error) {
 	return "", fmt.Errorf("not possible to detect and extract note Name from file using yaml title or # header")
 }
 
+var ValidZkId = regexp.MustCompile(`^[0-9].[a-zA-Z0-9./-]{0,31}$`)
+
 func IsZkId(id string) bool {
-	//TODO customize zk Id format/length/etc.
-	if len(id) != 12 { //202005091607 = 4+2+2+2+2 = 12
-		return false
-
-	}
-
-	_, err := strconv.Atoi(id)
-	return err == nil
+	return ValidZkId.MatchString(id)
 }
 
 func ParseNoteFilename(filename string) (isZettel bool, id, name string) {

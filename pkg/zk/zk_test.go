@@ -48,6 +48,20 @@ func TestIsZkId(t *testing.T) {
 			want: true,
 		},
 		{
+			name: "a number",
+			args: args{
+				id: "42",
+			},
+			want: true,
+		},
+		{
+			name: "folgezettel style",
+			args: args{
+				id: "42/7b.1A-8x/j",
+			},
+			want: true,
+		},
+		{
 			name: "incorrect zk id",
 			args: args{
 				id: "not exactly 202202222020",
