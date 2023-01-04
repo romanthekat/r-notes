@@ -96,12 +96,12 @@ func parseArguments() (sys.Path, sys.Path, int, []string, sys.Path, error) {
 	ignoreTags := flag.String("ignoreTags", "", "comma seperated list of tags which is used to ignore/filter notes")
 	flag.Parse()
 
-	if filepath.Ext(*notePath) != sys.MdExtension {
-		return "", "", -1, nil, "", fmt.Errorf("specify %s path for generating graph", sys.MdExtension)
-	}
+    if *notePath == "" || *outputPath == "" {
+        return "", "", -1, nil, "", fmt.Errorf("provide both 'notePath' and 'outputPath'")
+    }
 
-	if *notePath == "" || *outputPath == "" {
-		return "", "", -1, nil, "", fmt.Errorf("provide both 'notePath' and 'outputPath'")
+	if filepath.Ext(*notePath) != sys.MdExtension {
+		return "", "", -1, nil, "", fmt.Errorf("specify %s note path for generating sub-graph", sys.MdExtension)
 	}
 
 	return sys.Path(*notePath), sys.Path(filepath.Dir(*notePath)),

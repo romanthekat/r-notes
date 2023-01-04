@@ -75,3 +75,7 @@ func WriteToFile(path Path, content []string) {
 		log.Fatal(err)
 	}
 }
+
+func RenameFile(old Path, new Path) error {
+    return os.Rename(string(old), string(new))
+}
