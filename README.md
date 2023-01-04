@@ -163,4 +163,3 @@ Allows to change note (file)name, updating existing backlinks.
 
 Usage:
 `rename -notePath="path/to/id1 note1.md" -newName="id2 note2.md"`  
-`rename -h`
