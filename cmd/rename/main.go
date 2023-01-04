@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/sys"
-	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 	"path/filepath"
-	"strings"
 )
 
 func main() {
@@ -17,42 +15,24 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("note path: %s\n", notePath)
-    log.Printf("new name: %s\n", newName)
+	log.Printf("new name: %s\n", newName)
 
 	log.Println("obtaining notes")
-	mainNote, _ := getNotes(notePath, folderPath)
-
-    log.Println("updating note file and linked notes")
-    err = core.Rename(mainNote, newName)
-    if err != nil {
-        log.Fatal(err)
-    }
-}
-
-func getNotes(notePath, folderPath sys.Path) (*core.Note, []*core.Note) {
-	isZettel, id, _ := zk.ParseNoteFilename(sys.GetFilename(notePath))
-	if !isZettel {
-		log.Fatal(fmt.Errorf("provided note filename is not a correct zk note"))
-	}
-
 	notes, err := core.GetNotes(folderPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var targetNote *core.Note
-	for _, note := range notes {
-		if note.Id == id {
-			targetNote = note
-			break
-		}
+	mainNote, err := core.GetNoteById(notePath, notes)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	if targetNote == nil {
-		log.Fatal(fmt.Errorf("provided note wasn't found within derived notes folder"))
+	log.Println("updating note file and linked notes")
+	err = core.Rename(mainNote, newName)
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	return targetNote, notes
 }
 
 func parseArguments() (sys.Path, sys.Path, string, error) {
@@ -61,13 +41,12 @@ func parseArguments() (sys.Path, sys.Path, string, error) {
 	flag.Parse()
 
 	if *notePath == "" || *newName == "" {
-        return "", "", "", fmt.Errorf("provide both 'notePath' and 'newName'")
+		return "", "", "", fmt.Errorf("provide both 'notePath' and 'newName'")
 	}
 
-    if filepath.Ext(*notePath) != sys.MdExtension {
-        return "", "", "", fmt.Errorf("specify %s note path for renaming", sys.MdExtension)
-    }
-
+	if filepath.Ext(*notePath) != sys.MdExtension {
+		return "", "", "", fmt.Errorf("specify %s note path for renaming", sys.MdExtension)
+	}
 
 	return sys.Path(*notePath), sys.Path(filepath.Dir(*notePath)),
 		*newName,

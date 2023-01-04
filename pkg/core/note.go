@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"github.com/romanthekat/r-notes/pkg/zk"
@@ -71,6 +72,24 @@ func (n *Note) GetContent() []string {
 
 func GetNotes(folder sys.Path) ([]*Note, error) {
 	return GetNotesDetailed(folder, true, true)
+}
+
+func GetNoteById(notePath sys.Path, notes []*Note) (*Note, error) {
+	_, id, _ := zk.ParseNoteFilename(sys.GetFilename(notePath))
+
+	var targetNote *Note
+	for _, note := range notes {
+		if note.Id == id {
+			targetNote = note
+			break
+		}
+	}
+
+	if targetNote == nil {
+		return nil, errors.New("provided note path wasn't correctly parsed as a zk note")
+	}
+
+	return targetNote, nil
 }
 
 func GetNotesDetailed(folder sys.Path, fillLinks, fillTabs bool) ([]*Note, error) {

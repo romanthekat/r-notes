@@ -2,11 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/outline"
 	"github.com/romanthekat/r-notes/pkg/sys"
-	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
 )
 
@@ -27,7 +25,7 @@ func main() {
 	}
 	log.Println("found notes files:", len(notes))
 
-	targetNote, err := getTargetNote(path, notes)
+	targetNote, err := core.GetNoteById(path, notes)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -47,22 +45,4 @@ func main() {
 	resultContent = append(resultContent, result...)
 
 	sys.WriteToFile(resultPath, resultContent)
-}
-
-func getTargetNote(path sys.Path, notes []*core.Note) (*core.Note, error) {
-	_, id, _ := zk.ParseNoteFilename(sys.GetFilename(path))
-
-	var targetNote *core.Note
-	for _, note := range notes {
-		if note.Id == id {
-			targetNote = note
-			break
-		}
-	}
-
-	if targetNote == nil {
-		return nil, errors.New("provided note path wasn't correctly parsed as a zk note")
-	}
-
-	return targetNote, nil
 }
