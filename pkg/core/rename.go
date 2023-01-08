@@ -27,7 +27,13 @@ func Rename(note *Note, newFilename string) error {
 	return nil
 }
 
-func ChangeId(note *Note, newId string) error {
+func ChangeId(notes []*Note, note *Note, newId string) error {
+	for _, note := range notes {
+		if note.Id == newId {
+			return fmt.Errorf("there is already note with provided id %s: %s", newId, GetNoteLink(note))
+		}
+	}
+
 	if !zk.IsZkId(newId) {
 		return fmt.Errorf("new id is not a correct zk id: %s", newId)
 	}

@@ -29,7 +29,7 @@ func main() {
 	}
 
 	log.Println("updating note file and linked notes")
-	err = core.ChangeId(note, newId)
+	err = core.ChangeId(notes, note, newId)
 	if err != nil {
 		log.Fatal(err)
 	}
