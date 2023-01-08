@@ -57,13 +57,20 @@ func updateNoteContent(note *Note, newPath sys.Path, newName string) error {
 	note.Name = name
 	note.Path = newPath
 
+	syncNoteHeader(note)
+
+	return nil
+}
+
+func syncNoteHeader(note *Note) string {
 	for i, line := range note.GetContent() {
 		if md.IsFirstLevelHeader(line) {
-			note.Content[i] = "# " + note.Id + note.Name
+			note.Content[i] = "# " + note.Id + " " + note.Name
+			return note.Content[i]
 		}
 	}
 
-	return nil
+	return ""
 }
 
 func updateBacklinks(backlinks []*Note, oldLink, newLink string) {

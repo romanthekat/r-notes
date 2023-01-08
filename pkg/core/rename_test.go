@@ -132,3 +132,32 @@ func Test_updateLinks(t *testing.T) {
 		})
 	}
 }
+
+func Test_syncNoteHeader(t *testing.T) {
+	type args struct {
+		note *Note
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "simple markdown header #",
+			args: args{
+				note: NewNote("42", "note", "", []string{
+					"# 4200 old_note",
+					"some content",
+				}),
+			},
+			want: "# 42 note",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := syncNoteHeader(tt.args.note); got != tt.want {
+				t.Errorf("syncNoteHeader() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
