@@ -1,0 +1,97 @@
+package core
+
+import (
+	"github.com/romanthekat/r-notes/pkg/sys"
+	"sync"
+	"testing"
+)
+
+func Test_getNewPath(t *testing.T) {
+	type args struct {
+		oldPath sys.Path
+		newName string
+	}
+	tests := []struct {
+		name string
+		args args
+		want sys.Path
+	}{
+		{
+			name: "simple",
+			args: args{
+				oldPath: "/somewhere/202012051855 zettelkasten.md",
+				newName: "42 change_zettelkasten.md",
+			},
+			want: "/somewhere/42 change_zettelkasten.md",
+		},
+		{
+			name: "local path case",
+			args: args{
+				oldPath: "./somewhere/202012051855 zettelkasten.md",
+				newName: "142 change_zettelkasten.md",
+			},
+			want: "somewhere/142 change_zettelkasten.md",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := getNewPath(tt.args.oldPath, tt.args.newName); got != tt.want {
+				t.Errorf("getNewPath() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_updateNoteContent(t *testing.T) {
+	type args struct {
+		note    *Note
+		newPath sys.Path
+		newName string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "simple",
+			args: args{
+				note: &Note{
+					Id:          "202012051855",
+					Name:        "zettelkasten",
+					Content:     []string{"# 202012051855 zettelkasten", "some line"},
+					Path:        "/somewhere/202012051855 zettelkasten.md",
+					loadContent: &sync.Once{},
+				},
+				newPath: "/somewhere/42 updated_zettelkasten.md",
+				newName: "updated_zettelkasten",
+			},
+			wantErr: false,
+		},
+		{
+			name: "not zettel -> error",
+			args: args{
+				note: &Note{
+					Id:      "202012051855",
+					Name:    "zettelkasten",
+					Content: []string{"# 202012051855 zettelkasten", "some line"},
+					Path:    "/somewhere/202012051855 zettelkasten.md",
+				},
+				newPath: "/somewhere/NOT_ZETTEL updated_zettelkasten.md",
+				newName: "updated_zettelkasten",
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := updateNoteContent(tt.args.note, tt.args.newPath, tt.args.newName); (err != nil) != tt.wantErr {
+				t.Errorf("updateNoteContent() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if !tt.wantErr && (tt.args.note.Path != tt.args.newPath || tt.args.note.Name != tt.args.newName) {
+				t.Errorf("path or name did not match: path: %v, want: %v; name: %v, want: %v",
+					tt.args.note.Path, tt.args.newPath, tt.args.note.Name, tt.args.newName)
+			}
+		})
+	}
+}

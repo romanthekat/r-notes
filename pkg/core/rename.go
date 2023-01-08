@@ -32,6 +32,22 @@ func getNewPath(oldPath sys.Path, newName string) sys.Path {
 }
 
 func updateNote(note *Note, oldPath, newPath sys.Path, newName string) error {
+	err := updateNoteContent(note, newPath, newName)
+	if err != nil {
+		return err
+	}
+
+	err = sys.RenameFile(oldPath, newPath)
+	if err != nil {
+		return err
+	}
+
+	sys.WriteToFile(newPath, note.GetContent())
+
+	return nil
+}
+
+func updateNoteContent(note *Note, newPath sys.Path, newName string) error {
 	isZettel, id, name := zk.ParseNoteFilename(sys.GetFilename(newPath))
 	if !isZettel {
 		return fmt.Errorf("new name '%s' is not a correct zettel", newName)
@@ -46,13 +62,6 @@ func updateNote(note *Note, oldPath, newPath sys.Path, newName string) error {
 			note.Content[i] = "# " + note.Id + note.Name
 		}
 	}
-
-	err := sys.RenameFile(oldPath, newPath)
-	if err != nil {
-		return err
-	}
-
-	sys.WriteToFile(newPath, note.GetContent())
 
 	return nil
 }
