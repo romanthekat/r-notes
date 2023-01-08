@@ -68,12 +68,18 @@ func updateNoteContent(note *Note, newPath sys.Path, newName string) error {
 
 func updateBacklinks(backlinks []*Note, oldLink, newLink string) {
 	for _, backlink := range backlinks {
-		for i, line := range backlink.Content {
-			if strings.Contains(line, oldLink) {
-				backlink.Content[i] = strings.ReplaceAll(line, oldLink, newLink)
-			}
-		}
+		content := updateLinks(backlink, oldLink, newLink)
 
-		sys.WriteToFile(backlink.Path, backlink.GetContent())
+		sys.WriteToFile(backlink.Path, content)
 	}
+}
+
+func updateLinks(note *Note, oldLink string, newLink string) []string {
+	for i, line := range note.Content {
+		if strings.Contains(line, oldLink) {
+			note.Content[i] = strings.ReplaceAll(line, oldLink, newLink)
+		}
+	}
+
+	return note.GetContent()
 }

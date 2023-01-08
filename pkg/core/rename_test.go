@@ -2,6 +2,7 @@ package core
 
 import (
 	"github.com/romanthekat/r-notes/pkg/sys"
+	"reflect"
 	"sync"
 	"testing"
 )
@@ -91,6 +92,42 @@ func Test_updateNoteContent(t *testing.T) {
 			if !tt.wantErr && (tt.args.note.Path != tt.args.newPath || tt.args.note.Name != tt.args.newName) {
 				t.Errorf("path or name did not match: path: %v, want: %v; name: %v, want: %v",
 					tt.args.note.Path, tt.args.newPath, tt.args.note.Name, tt.args.newName)
+			}
+		})
+	}
+}
+
+func Test_updateLinks(t *testing.T) {
+	type args struct {
+		note    *Note
+		oldLink string
+		newLink string
+	}
+	tests := []struct {
+		name string
+		args args
+		want []string
+	}{
+		{
+			name: "simple",
+			args: args{
+				note: NewNote("42", "some note", "", []string{
+					"# 42 some note",
+					"a link -> [[2 some link]], then some text",
+				}),
+				oldLink: "[[2 some link]]",
+				newLink: "[[4 updated link]]",
+			},
+			want: []string{
+				"# 42 some note",
+				"a link -> [[4 updated link]], then some text",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := updateLinks(tt.args.note, tt.args.oldLink, tt.args.newLink); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("updateLinks() = %v, want %v", got, tt.want)
 			}
 		})
 	}
