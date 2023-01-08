@@ -162,4 +162,10 @@ Install:
 Allows to change note (file)name, updating existing backlinks.
 
 Usage:
-`rename -notePath="path/to/id1 note1.md" -newFilename="id2 note2.md"`  
+`rename -notePath="path/to/id1 note1.md" -newFilename="id2 note2.md"`
+
+## 8.1 Change id
+Similar to `rename` command, but simplifies to to change only id of a note.
+
+Usage:  
+`change-id -notesPath="path/to-notes/folder -oldId="42" -newId="9001"`

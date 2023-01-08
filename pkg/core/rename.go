@@ -27,6 +27,18 @@ func Rename(note *Note, newFilename string) error {
 	return nil
 }
 
+func ChangeId(note *Note, newId string) error {
+	if !zk.IsZkId(newId) {
+		return fmt.Errorf("new id is not a correct zk id: %s", newId)
+	}
+
+	return Rename(note, getNewFilenameById(note, newId))
+}
+
+func getNewFilenameById(note *Note, newId string) string {
+	return newId + " " + note.Name + filepath.Ext(string(note.Path))
+}
+
 func getNewPath(oldPath sys.Path, newFilename string) sys.Path {
 	return sys.Path(path.Join(filepath.Dir(string(oldPath)), newFilename))
 }

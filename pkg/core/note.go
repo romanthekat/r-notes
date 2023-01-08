@@ -74,9 +74,12 @@ func GetNotes(folder sys.Path) ([]*Note, error) {
 	return GetNotesDetailed(folder, true, true)
 }
 
-func GetNoteById(notePath sys.Path, notes []*Note) (*Note, error) {
+func GetNoteByPath(notes []*Note, notePath sys.Path) (*Note, error) {
 	_, id, _ := zk.ParseNoteFilename(sys.GetFilename(notePath))
+	return GetNoteById(notes, id)
+}
 
+func GetNoteById(notes []*Note, id string) (*Note, error) {
 	var targetNote *Note
 	for _, note := range notes {
 		if note.Id == id {

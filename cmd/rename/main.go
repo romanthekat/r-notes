@@ -23,7 +23,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	mainNote, err := core.GetNoteById(notePath, notes)
+	mainNote, err := core.GetNoteByPath(notes, notePath)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -161,3 +161,31 @@ func Test_syncNoteHeader(t *testing.T) {
 		})
 	}
 }
+
+func Test_getNewFilenameById(t *testing.T) {
+	type args struct {
+		note  *Note
+		newId string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "simple",
+			args: args{
+				note:  NewNote("42", "some name", "42 some name.md", nil),
+				newId: "9001",
+			},
+			want: "9001 some name.md",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := getNewFilenameById(tt.args.note, tt.args.newId); got != tt.want {
+				t.Errorf("getNewFilenameById() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

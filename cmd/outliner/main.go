@@ -25,7 +25,7 @@ func main() {
 	}
 	log.Println("found notes files:", len(notes))
 
-	targetNote, err := core.GetNoteById(path, notes)
+	targetNote, err := core.GetNoteByPath(notes, path)
 	if err != nil {
 		log.Fatal(err)
 	}
