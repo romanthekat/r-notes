@@ -10,13 +10,13 @@ import (
 	"strings"
 )
 
-func Rename(note *Note, newName string) error {
+func Rename(note *Note, newFilename string) error {
 	oldPath := note.Path
 	oldLink := GetNoteLink(note)
 
-	newPath := getNewPath(oldPath, newName)
+	newPath := getNewPath(oldPath, newFilename)
 
-	err := updateNote(note, oldPath, newPath, newName)
+	err := updateNote(note, oldPath, newPath)
 	if err != nil {
 		return err
 	}
@@ -27,12 +27,12 @@ func Rename(note *Note, newName string) error {
 	return nil
 }
 
-func getNewPath(oldPath sys.Path, newName string) sys.Path {
-	return sys.Path(path.Join(filepath.Dir(string(oldPath)), newName))
+func getNewPath(oldPath sys.Path, newFilename string) sys.Path {
+	return sys.Path(path.Join(filepath.Dir(string(oldPath)), newFilename))
 }
 
-func updateNote(note *Note, oldPath, newPath sys.Path, newName string) error {
-	err := updateNoteContent(note, newPath, newName)
+func updateNote(note *Note, oldPath, newPath sys.Path) error {
+	err := updateNoteContent(note, newPath)
 	if err != nil {
 		return err
 	}
@@ -47,10 +47,10 @@ func updateNote(note *Note, oldPath, newPath sys.Path, newName string) error {
 	return nil
 }
 
-func updateNoteContent(note *Note, newPath sys.Path, newName string) error {
+func updateNoteContent(note *Note, newPath sys.Path) error {
 	isZettel, id, name := zk.ParseNoteFilename(sys.GetFilename(newPath))
 	if !isZettel {
-		return fmt.Errorf("new name '%s' is not a correct zettel", newName)
+		return fmt.Errorf("new name '%s' is not a correct zettel", name)
 	}
 
 	note.Id = id

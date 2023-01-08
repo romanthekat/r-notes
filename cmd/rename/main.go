@@ -10,12 +10,12 @@ import (
 )
 
 func main() {
-	notePath, folderPath, newName, err := parseArguments()
+	notePath, folderPath, newFilename, err := parseArguments()
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("note path: %s\n", notePath)
-	log.Printf("new name: %s\n", newName)
+	log.Printf("new filename: %s\n", newFilename)
 
 	log.Println("obtaining notes")
 	notes, err := core.GetNotes(folderPath)
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	log.Println("updating note file and linked notes")
-	err = core.Rename(mainNote, newName)
+	err = core.Rename(mainNote, newFilename)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func main() {
 
 func parseArguments() (sys.Path, sys.Path, string, error) {
 	notePath := flag.String("notePath", "", "a path to note file")
-	newName := flag.String("newName", "", "new note (file)name, w/o extension")
+	newName := flag.String("newFilename", "", "new note filename")
 	flag.Parse()
 
 	if *notePath == "" || *newName == "" {

@@ -9,8 +9,8 @@ import (
 
 func Test_getNewPath(t *testing.T) {
 	type args struct {
-		oldPath sys.Path
-		newName string
+		oldPath     sys.Path
+		newFilename string
 	}
 	tests := []struct {
 		name string
@@ -20,23 +20,23 @@ func Test_getNewPath(t *testing.T) {
 		{
 			name: "simple",
 			args: args{
-				oldPath: "/somewhere/202012051855 zettelkasten.md",
-				newName: "42 change_zettelkasten.md",
+				oldPath:     "/somewhere/202012051855 zettelkasten.md",
+				newFilename: "42 change_zettelkasten.md",
 			},
 			want: "/somewhere/42 change_zettelkasten.md",
 		},
 		{
 			name: "local path case",
 			args: args{
-				oldPath: "./somewhere/202012051855 zettelkasten.md",
-				newName: "142 change_zettelkasten.md",
+				oldPath:     "./somewhere/202012051855 zettelkasten.md",
+				newFilename: "142 change_zettelkasten.md",
 			},
 			want: "somewhere/142 change_zettelkasten.md",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getNewPath(tt.args.oldPath, tt.args.newName); got != tt.want {
+			if got := getNewPath(tt.args.oldPath, tt.args.newFilename); got != tt.want {
 				t.Errorf("getNewPath() = %v, want %v", got, tt.want)
 			}
 		})
@@ -86,7 +86,7 @@ func Test_updateNoteContent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := updateNoteContent(tt.args.note, tt.args.newPath, tt.args.newName); (err != nil) != tt.wantErr {
+			if err := updateNoteContent(tt.args.note, tt.args.newPath); (err != nil) != tt.wantErr {
 				t.Errorf("updateNoteContent() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if !tt.wantErr && (tt.args.note.Path != tt.args.newPath || tt.args.note.Name != tt.args.newName) {
