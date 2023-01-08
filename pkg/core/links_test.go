@@ -34,6 +34,16 @@ func Test_getWikiLinks(t *testing.T) {
 			want: []string{"202012091241", "202012122011", "202202261908", "202202261909", "202202261910",
 				"202204101811", "202204101812", "202206182033", "text link", "text link three spaces"},
 		},
+		{
+			name: "folgezettel with . delimiter",
+			args: args{
+				content: []string{
+					"text [[421.1 meow]]",
+					"[[9001.32A header]] another link",
+				},
+			},
+			want: []string{"421.1", "9001.32A"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -75,7 +85,8 @@ func TestFillLinks(t *testing.T) {
 	notes := []*Note{
 		NewNote("202202261406", "Note one", "", []string{"[[202202261407]]", "[[202202261408]]"}),
 		NewNote("202202261407", "Note two", "", []string{"[[202202261406]]"}),
-		NewNote("202202261408", "Note three", "", []string{"[[202202261407]]"}),
+		NewNote("202202261408", "Note three", "", []string{"[[202202261407]] [[421.1 Note four]]"}),
+		NewNote("421.1", "Note four", "", []string{"[[202202261407]]"}),
 	}
 
 	notes = FillLinks(notes)
@@ -83,16 +94,23 @@ func TestFillLinks(t *testing.T) {
 	note1 := notes[0]
 	note2 := notes[1]
 	note3 := notes[2]
+	note4 := notes[3]
 
 	okLinks := hasLinks(note1.Links, note2.Id, note3.Id) &&
 		hasLinks(note2.Links, note1.Id) &&
-		hasLinks(note3.Links, note2.Id)
+		hasLinks(note3.Links, note2.Id, note4.Id) &&
+		hasLinks(note4.Links, note2.Id)
 	okBacklinks := hasLinks(note1.Backlinks, note2.Id) &&
-		hasLinks(note2.Backlinks, note1.Id, note3.Id) &&
-		hasLinks(note3.Backlinks, note1.Id)
+		hasLinks(note2.Backlinks, note1.Id, note3.Id, note4.Id) &&
+		hasLinks(note3.Backlinks, note1.Id) &&
+		hasLinks(note4.Backlinks, note3.Id)
 
-	if !(okLinks && okBacklinks) {
-		t.Errorf("filling (back)links doesn't work, links cycle broken:\n%+v\n%+v\n%+v\n", note1, note2, note3)
+	if !okLinks {
+		t.Errorf("filling links doesn't work correctly")
+	}
+
+	if !okBacklinks {
+		t.Errorf("filling backlinks doesn't work correctly")
 	}
 }
 
