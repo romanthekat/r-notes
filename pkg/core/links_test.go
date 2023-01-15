@@ -44,6 +44,16 @@ func Test_getWikiLinks(t *testing.T) {
 			},
 			want: []string{"421.1", "9001.32A"},
 		},
+		{
+			name: "with comma",
+			args: args{
+				content: []string{
+					"[[202201152237 note with comma, here]]",
+					"[[421.1 meow]]",
+				},
+			},
+			want: []string{"202201152237", "421.1"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -69,6 +79,20 @@ func TestGetNoteLink(t *testing.T) {
 				note: NewNote("202202261406", "A name", "", []string{}),
 			},
 			want: "[[202202261406 A name]]",
+		},
+		{
+			name: "wikilinks with folgezettel",
+			args: args{
+				note: NewNote("1.2.3", "some name", "", []string{}),
+			},
+			want: "[[1.2.3 some name]]",
+		},
+		{
+			name: "wikilinks with comma",
+			args: args{
+				note: NewNote("1.2.3", "some name, comma", "", []string{}),
+			},
+			want: "[[1.2.3 some name, comma]]",
 		},
 	}
 	for _, tt := range tests {

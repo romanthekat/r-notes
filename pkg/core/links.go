@@ -126,7 +126,7 @@ func findBacklinkHeader(note *Note) (found bool, index int, err error) {
 // getWikilinks extracts [[LINK_ID]] from provided Note content
 func getWikilinks(content []string) []string {
 	set := make(map[string]struct{})
-	re := regexp.MustCompile(`\[\[([A-Za-z\p{Cyrillic}\d]+?[A-Za-z\p{Cyrillic}\d:\-Σ/. ]+?)]]`) //TODO compile once for app
+	re := regexp.MustCompile(`\[\[([A-Za-z\p{Cyrillic}\d]+?[A-Za-z\p{Cyrillic}\d:\-Σ/., ]+?)]]`) //TODO compile once for app
 
 	for _, line := range content {
 		if IsBacklinksHeader(line) {
