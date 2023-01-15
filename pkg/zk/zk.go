@@ -26,7 +26,7 @@ func GetNoteNameByNoteContent(content []string) (name string, err error) {
 	return "", fmt.Errorf("not possible to detect and extract note Name from file using yaml title or # header")
 }
 
-var ValidZkId = regexp.MustCompile(`^[0-9].[a-zA-Z0-9./-]{0,31}$`)
+var ValidZkId = regexp.MustCompile(`^[0-9][a-zA-Z0-9./-]{0,31}?$`)
 
 func IsZkId(id string) bool {
 	return ValidZkId.MatchString(id)

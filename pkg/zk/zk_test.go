@@ -55,6 +55,13 @@ func TestIsZkId(t *testing.T) {
 			want: true,
 		},
 		{
+			name: "single digit number",
+			args: args{
+				id: "7",
+			},
+			want: true,
+		},
+		{
 			name: "folgezettel style",
 			args: args{
 				id: "42/7b.1A-8x/j",
