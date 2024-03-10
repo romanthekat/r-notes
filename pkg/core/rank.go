@@ -13,13 +13,13 @@ func GetNoteRank(note *Note) int {
 	rank := 0
 
 	rank += len(note.Links)
-	rank += len(note.Backlinks) * 2
+	rank += len(note.Backlinks) * 4
 
 	for tag := range note.Tags {
 		if tagRank, ok := tagsRanks[tag]; ok {
 			rank += tagRank
 		} else {
-			rank += 8
+			rank += 2
 		}
 	}
 
