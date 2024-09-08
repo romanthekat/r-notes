@@ -1,0 +1,25 @@
+{
+  "appVersion" : "1.8.0",
+  "authors" : [
+    {
+      "name": "Christian Tietze, mini patch by Roman Garanin",
+      "url": "https://christiantietze.de",
+      "url2": "https://zettelkasten.de",
+      "url3": "https://romangaranin.net"
+    }
+  ],
+  "input" : {
+    "notes" : [ "selected" ],
+    "text" : [ "selected" ]
+  },
+  "title" : "Extract Note (folgezettel prefix id)",
+  "identifier" : "net.romangaranin.extract_note",
+  "version" : "1.0.0",
+  "releaseDate" : "2024-09-08",
+  "output" : {
+    "insertText" : true,
+    "changeFile": { "programmaticFilename" : true }
+  },
+  "description" : "Zettel Refactoring: You have a text fragment that can be grouped together. Move the selected text into a new note and replace it with a link to the note. Includes mini patch to the original plugin from Christian Tietze: 'new note' dialog presets filename using current note's filename (first part before space), assuming it's folgezettel id.",
+  "dependencies" : [ ]
+}
