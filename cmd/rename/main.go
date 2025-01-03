@@ -37,11 +37,11 @@ func main() {
 
 func parseArguments() (sys.Path, sys.Path, string, error) {
 	notePath := flag.String("notePath", "", "a path to note file")
-	newName := flag.String("newFilename", "", "new note filename")
+	newFilename := flag.String("newFilename", "", "new note filename")
 	flag.Parse()
 
-	if *notePath == "" || *newName == "" {
-		return "", "", "", fmt.Errorf("provide both 'notePath' and 'newName'")
+	if *notePath == "" || *newFilename == "" {
+		return "", "", "", fmt.Errorf("provide both 'notePath' and 'newFilename'")
 	}
 
 	if filepath.Ext(*notePath) != sys.MdExtension {
@@ -49,6 +49,6 @@ func parseArguments() (sys.Path, sys.Path, string, error) {
 	}
 
 	return sys.Path(*notePath), sys.Path(filepath.Dir(*notePath)),
-		*newName,
+		*newFilename,
 		nil
 }
