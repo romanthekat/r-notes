@@ -6,6 +6,7 @@ import (
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"github.com/romanthekat/r-notes/pkg/zk"
 	"log"
+	"strings"
 	"sync"
 )
 
@@ -14,6 +15,8 @@ type Note struct {
 	Name string
 
 	Content []string
+
+	Level int
 
 	Links     []*Note
 	Backlinks []*Note
@@ -29,7 +32,10 @@ func (n *Note) String() string {
 }
 
 func NewNote(id, name string, path sys.Path, content []string) *Note {
-	return &Note{Id: id, Name: name, Path: path, Content: content, loadContent: &sync.Once{}}
+	//not the best idea to have this ±business logic calculation here
+	level := GetLevel(id)
+
+	return &Note{Id: id, Name: name, Path: path, Content: content, Level: level, loadContent: &sync.Once{}}
 }
 
 func NewNoteWithLinks(id, name string, path sys.Path, content []string, links []*Note, backlinks []*Note) *Note {
@@ -67,7 +73,12 @@ func (n *Note) GetContent() []string {
 		n.Content = content
 	})
 
+	//TODO trim?
 	return n.Content
+}
+
+func GetLevel(id string) int {
+	return strings.Count(strings.Split(id, " ")[0], ".") + 1
 }
 
 func GetNotes(folder sys.Path) ([]*Note, error) {
