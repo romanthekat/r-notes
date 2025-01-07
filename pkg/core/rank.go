@@ -15,6 +15,9 @@ func GetNoteRank(note *Note) int {
 	rank += len(note.Links)
 	rank += len(note.Backlinks) * 4
 
+	//assumption is: higher level notes are higher in priority/rank
+	rank += (5 - note.Level) * 2
+
 	for tag := range note.Tags {
 		if tagRank, ok := tagsRanks[tag]; ok {
 			rank += tagRank
