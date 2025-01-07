@@ -41,7 +41,7 @@ func parseArguments() (sys.Path, sys.Path, string, error) {
 	flag.Parse()
 
 	if *notePath == "" || *newFilename == "" {
-		return "", "", "", fmt.Errorf("provide both 'notePath' and 'newFilename'")
+		return "", "", "", fmt.Errorf("provide '-notePath' and '-newFilename'")
 	}
 
 	if filepath.Ext(*notePath) != sys.MdExtension {

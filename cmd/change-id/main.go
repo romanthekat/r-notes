@@ -42,7 +42,7 @@ func parseArguments() (sys.Path, string, string, error) {
 	flag.Parse()
 
 	if *notesPath == "" || *oldId == "" || *newId == "" {
-		return "", "", "", fmt.Errorf("provide 'notesPath', 'oldId', 'newId'")
+		return "", "", "", fmt.Errorf("provide '-notesPath', '-oldId', '-newId'")
 	}
 
 	return sys.Path(*notesPath),

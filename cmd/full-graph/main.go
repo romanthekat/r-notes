@@ -49,7 +49,7 @@ func parseArguments() (sys.Path, sys.Path, error) {
 	flag.Parse()
 
 	if *notesPath == "" || *outputPath == "" {
-		return "", "", fmt.Errorf("provide both 'notesPath' and 'outputPath'")
+		return "", "", fmt.Errorf("provide '-notesPath' and '-outputPath'")
 	}
 
 	return sys.Path(*notesPath), sys.Path(*outputPath), nil

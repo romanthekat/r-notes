@@ -1,6 +1,6 @@
 package core
 
-const JoinedNotesSeparator = "  \t\n  \t\n"
+const JoinedNotesSeparator = "\n\n"
 
 func JoinContent(notes []*Note) []string {
 	var result []string

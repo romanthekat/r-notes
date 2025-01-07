@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	folder, outputPath, err := parseArguments()
+	folder, outputPath, filterSubstring, err := parseArguments()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -20,6 +20,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if len(filterSubstring) > 0 {
+		log.Println("filtering substring")
+		notes = core.FilterNotesBySubstring(notes, filterSubstring)
+	}
+
 	notes = core.SortByRank(notes)
 
 	result := core.JoinContent(notes)
@@ -28,14 +33,15 @@ func main() {
 	log.Println("file saved to", outputPath)
 }
 
-func parseArguments() (sys.Path, sys.Path, error) {
+func parseArguments() (sys.Path, sys.Path, string, error) {
 	notesPath := flag.String("notesPath", "", "a path to notes folder")
 	outputPath := flag.String("outputPath", "./", "a path to result join file")
+	filterSubstring := flag.String("filterSubstring", "", "a substring in id or name to filter by")
 	flag.Parse()
 
 	if *notesPath == "" || *outputPath == "" {
-		return "", "", fmt.Errorf("provide both 'notesPath' and 'outputPath'")
+		return "", "", "", fmt.Errorf("provide '-notesPath' and '-outputPath', and optional '-filterSubstring'")
 	}
 
-	return sys.Path(*notesPath), sys.Path(*outputPath), nil
+	return sys.Path(*notesPath), sys.Path(*outputPath), *filterSubstring, nil
 }
