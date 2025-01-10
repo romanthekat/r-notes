@@ -2,11 +2,12 @@ package outline
 
 import (
 	"fmt"
+	"path/filepath"
+	"time"
+
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/md"
 	"github.com/romanthekat/r-notes/pkg/sys"
-	"path/filepath"
-	"time"
 )
 
 const notesDelimiter = "    "
