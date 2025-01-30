@@ -29,10 +29,11 @@ func Test_getWikiLinks(t *testing.T) {
 					"[[202206182033 link with title]]",
 					"[[202012122011 Σ programming]]",
 					"[[202012091241 first-second]]",
+					"[[abc.de under_score]]",
 				},
 			},
 			want: []string{"202012091241", "202012122011", "202202261908", "202202261909", "202202261910",
-				"202204101811", "202204101812", "202206182033", "text link", "text link three spaces"},
+				"202204101811", "202204101812", "202206182033", "abc.de under_score", "text link", "text link three spaces"},
 		},
 		{
 			name: "folgezettel with . delimiter",
