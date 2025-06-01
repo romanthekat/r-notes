@@ -159,13 +159,20 @@ Install:
 
 
 ## 8. Rename
-Allows to change note (file)name, updating existing backlinks.
+Allows changing note (file)name, updating existing backlinks.
 
 Usage:
 `rename -notePath="path/to/id1 note1.md" -newFilename="id2 note2.md"`
 
 ## 8.1 Change id
-Similar to `rename` command, but simplifies to to change only id of a note.
+Similar to `rename` command, but simplifies to change only id of a note.
 
 Usage:  
 `change-id -notesPath="path/to-notes/folder -oldId="42" -newId="9001"`
+
+## 9. Relevant notes
+Rather barebone tool which for provided `notePath` will return relevant notes in wikilinks format.
+Relevant notes are considered by direct links, backlinks, and by folgezettel id adjacency; f.e. note with id `54.1a` is relevant to `54.1`.
+
+Usage:
+`relevant-notes -notePath="path/to/id1 note1.md"`
