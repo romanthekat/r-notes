@@ -78,7 +78,7 @@ func (n *Note) GetContent() []string {
 }
 
 func GetLevel(id string) int {
-	return strings.Count(strings.Split(id, " ")[0], ".") + 1
+	return 1 + strings.Count(id, ".")
 }
 
 func GetNotes(folder sys.Path) ([]*Note, error) {

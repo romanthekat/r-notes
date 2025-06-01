@@ -174,5 +174,13 @@ Usage:
 Rather barebone tool which for provided `notePath` will return relevant notes in wikilinks format.
 Relevant notes are considered by direct links, backlinks, and by folgezettel id adjacency; f.e. note with id `54.1a` is relevant to `54.1`.
 
-Usage:
+Usage:  
 `relevant-notes -notePath="path/to/id1 note1.md"`
+
+## 10. Get notes by level
+List notes only of level X included, where level is deducted by folgezettel id structure with `.` separator.  
+F.e.: id `42` has level 1, `42.1.2` has level 3.
+
+Usage:  
+`get-notes-by-level -notesPath="path/to-notes/folder`: show only top level notes  
+`get-notes-by-level -notesPath="path/to-notes/folder -level=2`: show top notes and direct branches  
