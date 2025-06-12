@@ -6,6 +6,7 @@ import (
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"log"
+	"strings"
 )
 
 func main() {
@@ -23,7 +24,8 @@ func main() {
 	log.Printf("notes of top-%d levels:", level)
 	topNotes := core.GetTopNotes(notes, level)
 	for _, note := range topNotes {
-		fmt.Println(core.GetNoteLink(note))
+		prefix := strings.Repeat("  ", (note.Level-1)*2)
+		fmt.Printf("%s%s\n", prefix, core.GetNoteLink(note))
 	}
 }
 
