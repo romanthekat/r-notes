@@ -1,6 +1,8 @@
 package core
 
-import "strings"
+import (
+	"strings"
+)
 
 func GetTopNotes(notes []*Note, level int) []*Note {
 	var result []*Note

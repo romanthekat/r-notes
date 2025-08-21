@@ -152,7 +152,11 @@ Ranking logic is pretty naive, it's more of an experiment without real purpose:
 - add 8 for each tag (a few tags get more points)
 
 Usage:  
-`rank-join -notesPath="path/to/notes/folder" -outputPath="path/to/result.md"`
+`rank-join -notesPath="path/to/notes/folder" -outputPath="path/to/result.md" -filterSubstring='54a'`  
+handy filter to filter by substring, which can also be a (part) of id
+
+`rank-join -notesPath="path/to/notes/folder" -outputPath="path/to/result.md" -filterMainNote='54a ttrpg'`  
+filters similarly to `relevant-notes` command, getting all direct links/backlinks, as well as direct neighbors of a note by id.
 
 Install:  
 `go install github.com/romanthekat/r-notes/cmd/rank-join@latest`

@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"path/filepath"
+
 	"github.com/romanthekat/r-notes/pkg/core"
 	"github.com/romanthekat/r-notes/pkg/sys"
 	"github.com/romanthekat/r-notes/pkg/zk"
-	"log"
-	"path/filepath"
 )
 
 func main() {
